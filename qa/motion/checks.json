@@ -1,0 +1,35 @@
+[
+  {
+    "width": 1440,
+    "reduced": false,
+    "tickerMoves": true,
+    "menuOpen": true,
+    "carouselMoved": true,
+    "faqOpen": true,
+    "broken": 0,
+    "errors": [],
+    "running": 0
+  },
+  {
+    "width": 390,
+    "reduced": false,
+    "tickerMoves": true,
+    "menuOpen": true,
+    "carouselMoved": true,
+    "faqOpen": true,
+    "broken": 0,
+    "errors": [],
+    "running": 2
+  },
+  {
+    "width": 390,
+    "reduced": true,
+    "tickerMoves": false,
+    "menuOpen": true,
+    "carouselMoved": true,
+    "faqOpen": true,
+    "broken": 0,
+    "errors": [],
+    "running": 0
+  }
+]

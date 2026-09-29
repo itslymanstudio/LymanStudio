@@ -1,0 +1,22 @@
+{
+  "name": "bungee-clone",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "build": "node scripts/mirror.mjs && node scripts/build-static-preview.mjs",
+    "build:preview": "node scripts/build-static-preview.mjs",
+    "test:typography": "node scripts/check-type-system.mjs",
+    "test:footer": "node scripts/check-footer.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/space-grotesk": "^5.3.0",
+    "@fontsource/dm-mono": "^5.3.0",
+    "simple-icons": "^16.32.0"
+  }
+}

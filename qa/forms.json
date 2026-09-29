@@ -1,0 +1,13 @@
+{
+  "results": [
+    {
+      "route": "/",
+      "message": "Local preview: connect your own form service to receive submissions."
+    },
+    {
+      "route": "/contact",
+      "message": "Local preview: connect your own form service to receive submissions."
+    }
+  ],
+  "sent": []
+}

@@ -1,0 +1,95 @@
+export function spaceGroteskStyles(assetBase) {
+  const fontBase = `${assetBase}/fonts`;
+  return `
+    @font-face {
+      font-family: "Space Grotesk";
+      font-style: normal;
+      font-weight: 300 700;
+      font-display: swap;
+      src: url("${fontBase}/space-grotesk-latin-wght-normal.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "Space Grotesk";
+      font-style: normal;
+      font-weight: 300 700;
+      font-display: swap;
+      src: url("${fontBase}/space-grotesk-latin-ext-wght-normal.woff2") format("woff2");
+      unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+    }
+    @font-face {
+      font-family: "Space Grotesk";
+      font-style: normal;
+      font-weight: 300 700;
+      font-display: swap;
+      src: url("${fontBase}/space-grotesk-vietnamese-wght-normal.woff2") format("woff2");
+      unicode-range: U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;
+    }
+    @font-face {
+      font-family: "DM Mono";
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url("${fontBase}/dm-mono-latin-400-normal.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "DM Mono";
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url("${fontBase}/dm-mono-latin-500-normal.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "DM Mono";
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url("${fontBase}/dm-mono-latin-ext-400-normal.woff2") format("woff2");
+      unicode-range: U+0100-024F,U+1E00-1EFF,U+20A0-20CF,U+2C60-2C7F,U+A720-A7FF;
+    }
+    @font-face {
+      font-family: "DM Mono";
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url("${fontBase}/dm-mono-latin-ext-500-normal.woff2") format("woff2");
+      unicode-range: U+0100-024F,U+1E00-1EFF,U+20A0-20CF,U+2C60-2C7F,U+A720-A7FF;
+    }
+    :root {
+      --font-main: "Space Grotesk", sans-serif;
+      --font-mono: "DM Mono", monospace;
+    }
+    html, body {
+      font-family: var(--font-main) !important;
+      font-weight: 400;
+      letter-spacing: -.02em;
+    }
+    html body, html body *, html body *::before, html body *::after {
+      font-family: var(--font-main) !important;
+    }
+    html body :is(h1, h2, h3, h4, .logo, .wordmark),
+    html body :is(h1, h2, h3, h4, .logo, .wordmark) * {
+      font-family: var(--font-main) !important;
+      font-weight: 600 !important;
+      letter-spacing: -.08em !important;
+      line-height: .9 !important;
+    }
+    html body :is(.hero-title, .hero-title *) {
+      font-family: var(--font-main) !important;
+      font-size: clamp(90px, 10vw, 185px) !important;
+      font-weight: 700 !important;
+      line-height: .8 !important;
+      letter-spacing: -.12em !important;
+    }
+    html body :is(.eyebrow, .nav, .metadata, .project-date, .caption, .mono-text,
+      .ratio-faq__eyebrow, .meet-devs__eyebrow, .meet-devs__caption p,
+      [data-framer-name="NavBar"], [data-framer-name="Date"], [data-framer-name="Number"]),
+    html body :is(.eyebrow, .nav, .metadata, .project-date, .caption, .mono-text,
+      .ratio-faq__eyebrow, .meet-devs__eyebrow, .meet-devs__caption p,
+      [data-framer-name="NavBar"], [data-framer-name="Date"], [data-framer-name="Number"]) * {
+      font-family: var(--font-mono) !important;
+      font-weight: 400 !important;
+      letter-spacing: .02em !important;
+      text-transform: uppercase !important;
+    }
+  `;
+}
