@@ -58,7 +58,7 @@ async function send(req, res, data, headers, file) {
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.mp4': 'video/mp4', '.ico': 'image/x-icon' };
 const siteLinks = { homeHref: '/', projectsHref: '/projects', aboutHref: '/about', blogHref: '/blog', contactHref: '/contact', privacyHref: '/privacy', termsHref: '/terms' };
 const menuOptions = currentRoute => ({ links: siteLinks, assetBase: '/_assets', gsapSrc: '/gsap.min.js', menuSrc: '/staggered-menu.js', currentRoute });
-http.createServer(async (req, res) => {
+export async function requestHandler(req, res) {
   try {
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); return res.end('Preview only'); }
     const url = new URL(req.url, 'http://localhost');
@@ -168,4 +168,8 @@ http.createServer(async (req, res) => {
     }
     await send(req, res, data, headers, file);
   } catch { res.writeHead(404); res.end('Not found'); }
-}).listen(Number(process.env.PORT || 3000), process.env.HOST || (production ? '0.0.0.0' : '127.0.0.1'), () => console.log('Lyman Studio preview: http://localhost:' + (process.env.PORT || 3000)));
+}
+export default requestHandler;
+if (process.env.LYMAN_SERVERLESS !== '1') {
+  http.createServer(requestHandler).listen(Number(process.env.PORT || 3000), process.env.HOST || (production ? '0.0.0.0' : '127.0.0.1'), () => console.log('Lyman Studio preview: http://localhost:' + (process.env.PORT || 3000)));
+}

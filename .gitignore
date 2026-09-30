@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.vercel/
 .env.local
 .env
 .env.*
@@ -21,6 +22,7 @@ public/hero-ripple.js
 # Keep only build and validation tools referenced by package.json.
 scripts/*
 !scripts/build-deployment.mjs
+!scripts/build-vercel.mjs
 !scripts/build-blog-covers.mjs
 !scripts/build-services-carousel.mjs
 !scripts/build-footer-effects.mjs
