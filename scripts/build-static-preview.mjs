@@ -100,6 +100,7 @@ for (const route of manifest.routes) {
     ${dispatchCardStyles}
     ${siteCanvasStyles}
     .framer-chdyiw-container{display:none!important}
+    #__framer-badge-container,.__framer-badge{display:none!important}
 ${route === processArticleRoute ? '' : '#main footer[data-framer-name="CTA+Newsletter"]{display:none!important}'}
     [data-framer-appear-id]{opacity:1;transform:none}
     [data-framer-component-type="RichTextContainer"] span{opacity:1;transform:none}

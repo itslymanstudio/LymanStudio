@@ -114,7 +114,7 @@ export async function requestHandler(req, res) {
       html = replaceBlogCovers(html, '/_assets', home ? '/' : url.pathname.replace(/\/$/,''));
       html = html.replace(/<html\b/i, `<html data-ratio-route="${home ? '/' : url.pathname.replace(/\/$/, '')}"`);
       const referenceCtaStyles = processArticle ? '' : '#main footer[data-framer-name="CTA+Newsletter"]{display:none!important}';
-      const styles = `${spaceGroteskStyles('/_assets')}${closingFooterStyles}.framer-chdyiw-container{display:none!important}${referenceCtaStyles}${home ? `${introReferenceStyles}${studioMetricsStyles}${faqStyles}.framer-1ju0swc[data-framer-name="Testimonials"]{display:none!important}${meetDevsStyles}${logoLoopStyles}${heroEffectsStyles}${servicesCarouselStyles}` : ''}${processArticle ? processArticleStyles : ''}${siteCanvasStyles}`;
+      const styles = `${spaceGroteskStyles('/_assets')}${closingFooterStyles}.framer-chdyiw-container{display:none!important}#__framer-badge-container,.__framer-badge{display:none!important}${referenceCtaStyles}${home ? `${introReferenceStyles}${studioMetricsStyles}${faqStyles}.framer-1ju0swc[data-framer-name="Testimonials"]{display:none!important}${meetDevsStyles}${logoLoopStyles}${heroEffectsStyles}${servicesCarouselStyles}` : ''}${processArticle ? processArticleStyles : ''}${siteCanvasStyles}`;
       html = html.replace('</head>', `<style>${styles}${dispatchCardStyles}</style></head>`);
       if (home) {
         html = replaceHeroMedia(html, '/_assets');
