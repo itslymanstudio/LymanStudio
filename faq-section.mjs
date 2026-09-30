@@ -1,11 +1,11 @@
 const questions = [
   {
-    question: 'What does Ratio Design do?',
+    question: 'What does Lyman Studio do?',
     answer: 'We are a Bangalore-based design agency that designs, builds, and deploys apps, websites, and other digital experiences.',
   },
   {
     question: 'Where are you based?',
-    answer: 'Ratio Design is based in Bangalore, India.',
+    answer: 'Lyman Studio is based in Bangalore, India.',
   },
   {
     question: 'Can you take a project to launch?',

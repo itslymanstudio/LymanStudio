@@ -9,8 +9,8 @@ const policies = {
     title: 'Privacy Policy',
     lead: 'A clear account of what this website receives, how we use it, and how to contact us about your information.',
     sections: [
-      ['Who we are', `Ratio Design is a design agency based in Bengaluru, India. For questions about this policy or your personal information, email <a href="mailto:${email}">${email}</a>.`],
-      ['Information you share', `If you email us or contact us through WhatsApp, we receive the details you choose to provide, such as your name, contact information, company, and project brief. The contact form shown on this website is currently a preview: submitting it displays a message in your browser and does not send the entries to Ratio Design. Please use email for an enquiry.`],
+      ['Who we are', `Lyman Studio is a design agency based in Bengaluru, India. For questions about this policy or your personal information, email <a href="mailto:${email}">${email}</a>.`],
+      ['Information you share', `If you email us or contact us through WhatsApp, we receive the details you choose to provide, such as your name, contact information, company, and project brief. The contact form shown on this website is currently a preview: submitting it displays a message in your browser and does not send the entries to Lyman Studio. Please use email for an enquiry.`],
       ['Technical information', `When this site is hosted, the hosting service may process ordinary request information such as an IP address, browser type, requested pages, and access time to deliver and protect the site. This website does not currently offer user accounts. Before adding analytics, advertising tools, or a connected form, we will update this policy to describe them.`],
       ['How we use information', `We use information you send us to respond to enquiries, discuss and plan potential projects, provide agreed services, maintain the security of our communications, and meet applicable legal obligations. We do not use enquiry details to send a newsletter unless you separately ask for one.`],
       ['Sharing and external services', `We do not sell your personal information. We may use providers needed for email, messaging, hosting, or project delivery, and disclose information when required by law. If you choose to use an external link, including WhatsApp, that service handles your information under its own privacy terms.`],
@@ -22,15 +22,15 @@ const policies = {
   },
   terms: {
     title: 'Terms & Conditions',
-    lead: 'The basic terms for using the Ratio Design website and contacting us about a project.',
+    lead: 'The basic terms for using the Lyman Studio website and contacting us about a project.',
     sections: [
       ['Using this website', `By using this website, you agree to use it lawfully and not interfere with its operation, security, or other visitors. If you do not agree with these terms, please stop using the site.`],
-      ['About our services', `Ratio Design designs, builds, and deploys digital products, including websites and apps. Information on this site is general and is not an offer, fixed quote, or guarantee of a particular result. Scope, timeline, payment, ownership, support, and other project terms will be set out in a separate written agreement before work begins.`],
-      ['Website content', `The design, text, images, and other materials on this website belong to Ratio Design or their respective owners and are protected by applicable intellectual-property law. You may view the site for personal or business evaluation, but may not copy, republish, or commercially use its content without permission.`],
+      ['About our services', `Lyman Studio designs, builds, and deploys digital products, including websites and apps. Information on this site is general and is not an offer, fixed quote, or guarantee of a particular result. Scope, timeline, payment, ownership, support, and other project terms will be set out in a separate written agreement before work begins.`],
+      ['Website content', `The design, text, images, and other materials on this website belong to Lyman Studio or their respective owners and are protected by applicable intellectual-property law. You may view the site for personal or business evaluation, but may not copy, republish, or commercially use its content without permission.`],
       ['Enquiries', `Sending an enquiry does not create a client relationship or require us to accept a project. Please do not send confidential or sensitive information through the preview contact form. For an actual enquiry, email <a href="mailto:${email}">${email}</a>.`],
       ['External links', `This site may link to services or websites we do not control. Those destinations have their own terms and policies. A link does not mean we endorse or guarantee their content.`],
       ['Availability and accuracy', `We aim to keep the site useful and accurate, but its content may change and the site may occasionally be unavailable. To the extent permitted by law, the website and its general information are provided without warranties. This does not affect rights that cannot lawfully be excluded.`],
-      ['Liability', `To the extent permitted by applicable law, Ratio Design is not responsible for losses arising solely from reliance on general website content or from temporary site unavailability. Any liability relating to paid project work will be addressed in the separate agreement for that project.`],
+      ['Liability', `To the extent permitted by applicable law, Lyman Studio is not responsible for losses arising solely from reliance on general website content or from temporary site unavailability. Any liability relating to paid project work will be addressed in the separate agreement for that project.`],
       ['Privacy', `Our <a href="{{privacyHref}}">Privacy Policy</a> explains how this website handles personal information. Please read it before contacting us.`],
       ['Changes and contact', `We may update these terms by posting a revised version here with a new last-updated date. These website terms are intended to be governed by the laws of India, subject to any mandatory rules that apply. Questions can be sent to <a href="mailto:${email}">${email}</a>.`],
     ],
@@ -75,13 +75,13 @@ export function renderLegalPage(kind, links, assetBase, motionSrc) {
   const footer = closingFooterMarkup(links);
   return `<!doctype html><html lang="en" data-ratio-route="/${kind}"><head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>${policy.title} | Ratio Design</title>
+    <title>${policy.title} | Lyman Studio</title>
     <meta name="description" content="${policy.lead}">
     <style>${spaceGroteskStyles(assetBase)}${closingFooterStyles}${legalStyles}</style>
   </head><body>
-    <header class="ratio-legal__nav"><a class="ratio-legal__brand" href="${links.homeHref}">Ratio Design®</a><nav class="ratio-legal__nav-links" aria-label="Main navigation"><a href="${links.projectsHref}">Projects</a><a href="${links.aboutHref}">About</a><a href="${links.contactHref}">Contact</a></nav></header>
+    <header class="ratio-legal__nav"><a class="ratio-legal__brand" href="${links.homeHref}">Lyman Studio</a><nav class="ratio-legal__nav-links" aria-label="Main navigation"><a href="${links.projectsHref}">Projects</a><a href="${links.aboutHref}">About</a><a href="${links.contactHref}">Contact</a></nav></header>
     <main class="ratio-legal__main" id="main">
-      <p class="ratio-legal__meta">Ratio Design / Last updated ${updated}</p>
+      <p class="ratio-legal__meta">Lyman Studio / Last updated ${updated}</p>
       <h1>${policy.title}</h1><p class="ratio-legal__lead">${policy.lead}</p>
       <div class="ratio-legal__rule" aria-hidden="true"></div>
       <div class="ratio-legal__layout"><nav class="ratio-legal__toc" aria-label="On this page"><p class="ratio-legal__toc-label">On this page</p>${sections.map(section => `<a href="#${section.id}">${section.heading}</a>`).join('')}</nav>

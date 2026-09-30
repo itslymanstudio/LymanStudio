@@ -1,2 +1,30 @@
 node_modules/
+dist/
 .env.local
+.env
+.env.*
+!.env.example
+*.log
+qa/
+preview/
+assets/hero-source/
+assets/devs/
+/index.html
+/reference.html
+/README.md
+/Start Preview.cmd
+/start-preview.ps1
+/.release-check-*/
+public/hero-light-rails.js
+public/hero-ripple.js
+
+# Keep only build and validation tools referenced by package.json.
+scripts/*
+!scripts/build-deployment.mjs
+!scripts/build-blog-covers.mjs
+!scripts/build-services-carousel.mjs
+!scripts/build-footer-effects.mjs
+!scripts/build-static-preview.mjs
+!scripts/check-type-system.mjs
+!scripts/check-footer.mjs
+!scripts/mirror.mjs

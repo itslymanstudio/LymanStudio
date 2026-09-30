@@ -1,0 +1,17 @@
+{
+  "tool": "Built-in image_gen",
+  "covers": [
+    {
+      "name": "inside-the-studio",
+      "prompt": "Use case: stylized-concept. Asset type: Lyman Studio website blog cover, landscape 16:10. Topic: Inside the Studio — the process of crafting a standout identity. Create a polished editorial photograph of a contemporary design studio workbench viewed diagonally from above: neatly arranged cream grid sketch paper showing a few abstract pencil logo studies (no letters), physical lime and cobalt color swatches, cut paper forms, a pencil, a translucent lavender acrylic shape casting beautiful shadows. Real tactile paper and convincing light, considered asymmetric composition, center area safe to crop. Warm ivory backdrop matching #f3f0e9, charcoal, pale acid lime, restrained cobalt and burnt orange accents. Sophisticated design magazine art direction, strong readable composition at thumbnail size. No people, no legible text, no logos, no watermarks, no collage panels."
+    },
+    {
+      "name": "signature-visual-language",
+      "prompt": "Use case: product-mockup. Asset type: Lyman Studio website blog cover, landscape 16:10. Topic: Why every brand needs a signature visual language. Create a premium editorial still life of a coherent identity system: blank cream stationery cards, a dark charcoal packaging box and acid-lime paper sleeve, each marked with the same simple bold abstract four-lobed geometric symbol (not an existing brand), a few cobalt and burnt-orange color chips. Demonstrate a distinctive repeated visual motif across different surfaces, arranged as an elegant sculptural composition on warm ivory #f3f0e9. Tactile paper, deep crisp side shadows, convincing photoreal materials, clean studio lighting. Strong central composition safe for thumbnail crops, high-end design magazine aesthetic, not a flat infographic. No letters, no typography, no people, no actual brand names, no watermarks."
+    },
+    {
+      "name": "small-business-online-presence",
+      "prompt": "Use case: stylized-concept. Asset type: Lyman Studio website blog cover, landscape 16:10. Topic: Why every business, even a small business, needs an online presence. Create a sophisticated editorial 3D still life connecting a small local shop to its digital presence: a beautifully crafted miniature ivory storefront with a subtle burnt-orange awning beside a slim tablet and upright phone showing coordinated modern shop website interfaces with charcoal layout blocks, cream surfaces and pale lime action blocks (no readable text). Product thumbnails use small sculptural shapes, not logos. Arrange all three physical objects in a convincing tactile studio scene on warm ivory #f3f0e9, with a discreet cobalt detail, beautiful hard directional light and realistic shadows. Centered crop-safe arrangement, elegant and minimal, inviting rather than corporate stock art. No people, no floating icons, no giant cursor, no globe, no lettering, no actual brands, no watermark."
+    }
+  ]
+}

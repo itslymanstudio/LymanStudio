@@ -1,5 +1,6 @@
 import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
 import path from 'node:path';
+import { showProjects } from '../site-features.mjs';
 import { meetDevsStyles, replaceTestimonials } from '../meet-devs.mjs';
 import { rebrandHtml } from '../rebrand.mjs';
 import { spaceGroteskStyles } from '../typography.mjs';
@@ -11,24 +12,51 @@ import { siteCanvasStyles } from '../site-canvas.mjs';
 import { processArticleRoute, processArticleStyles, injectProcessArticle } from '../process-article.mjs';
 import { logoLoopStyles } from '../logo-loop.mjs';
 import { heroEffectsStyles } from '../hero-effects.mjs';
+import { servicesCarouselStyles, injectServicesCarousel } from '../services-carousel.mjs';
+import { buildServicesCarousel } from './build-services-carousel.mjs';
 import { heroMediaStyles, heroMediaRuntime, replaceHeroMedia } from '../hero-media.mjs';
-import { navigationStyles } from '../navigation.mjs';
+import { injectStaggeredMenu } from '../staggered-menu.mjs';
 import { renderLegalPage } from '../legal-pages.mjs';
+import { dispatchPosts, dispatchRuntime, dispatchCardStyles, onlinePresenceRoute, renderOnlinePresenceArticle, onlinePresenceArticleStyles, replaceBlogCovers } from '../blog-dispatch.mjs';
+import { buildBlogCovers } from './build-blog-covers.mjs';
+import { buildFooterEffects } from './build-footer-effects.mjs';
 const manifest = JSON.parse(await readFile('mirror-manifest.json', 'utf8'));
+await buildServicesCarousel();
+await buildBlogCovers();
+await buildFooterEffects();
 await mkdir('public/_assets/tech-logos', { recursive: true });
 for (const icon of ['react', 'nextdotjs', 'typescript', 'tailwindcss']) {
   await copyFile(`node_modules/simple-icons/icons/${icon}.svg`, `public/_assets/tech-logos/${icon}.svg`);
 }
+await copyFile('node_modules/gsap/dist/gsap.min.js', 'public/gsap.min.js');
 const routeFile = route => route === '/' ? 'index.html' : `preview${route}/index.html`;
 const excludedProjects = new Set(['/projects/zypher', '/projects/grotesks', '/projects/clonify', '/projects/polltree']);
+const allowedBlogSlugs = new Set(dispatchPosts.map(post => post.slug));
+const excludedBlogs = new Set(manifest.routes.filter(route => {
+  const slug = route.match(/^\/blog\/([^/]+)\/?$/)?.[1];
+  return slug && !allowedBlogSlugs.has(slug);
+}));
+const previewRoutes = new Set([...manifest.routes.filter(route => !excludedBlogs.has(route)), onlinePresenceRoute]);
 for (const route of manifest.routes) {
   const output = routeFile(route);
   const directory = path.dirname(output);
   const relative = target => path.relative(directory, target).replaceAll('\\', '/') || './';
+  if (!showProjects && /^\/projects(?:\/|$)/.test(route)) {
+    const homeHref = relative(routeFile('/'));
+    await mkdir(directory, { recursive: true });
+    await writeFile(output, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${homeHref}"><title>Lyman Studio</title></head><body><a href="${homeHref}">Return home</a></body></html>`);
+    continue;
+  }
   if (excludedProjects.has(route)) {
     const projectsHref = relative(routeFile('/projects'));
     await mkdir(directory, { recursive: true });
-    await writeFile(output, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${projectsHref}"><title>Projects | Ratio Design</title></head><body><a href="${projectsHref}">View projects</a></body></html>`);
+    await writeFile(output, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${projectsHref}"><title>Projects | Lyman Studio</title></head><body><a href="${projectsHref}">View projects</a></body></html>`);
+    continue;
+  }
+  if (excludedBlogs.has(route)) {
+    const blogHref = relative(routeFile('/blog'));
+    await mkdir(directory, { recursive: true });
+    await writeFile(output, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${blogHref}"><title>Creative Dispatch | Lyman Studio</title></head><body><a href="${blogHref}">View Creative Dispatch</a></body></html>`);
     continue;
   }
   let html = await readFile(path.join('public', route, 'index.html'), 'utf8');
@@ -40,13 +68,15 @@ for (const route of manifest.routes) {
   if (route === '/') html = replaceTestimonials(html, relative('public/_assets/devs'));
   html = html.replace(/href="(\.\/[^"#?]*|\/[^"#?]*)"/g, (all, raw) => {
     const targetRoute = new URL(raw, 'https://bungee.framer.website' + route).pathname.replace(/\/$/, '') || '/';
-    return manifest.routes.includes(targetRoute) ? `href="${relative(routeFile(targetRoute))}"` : all;
+    return previewRoutes.has(targetRoute) ? `href="${relative(routeFile(targetRoute))}"` : all;
   });
   html = rebrandHtml(html, { assetBase: relative('public/_assets'), contactHref: relative(routeFile('/contact')) });
+  html = replaceBlogCovers(html,relative('public/_assets'),route);
   html = html.replace(/<html\b/i, `<html data-ratio-route="${route}"`);
   if (route === '/') html = replaceMetricsSection(html);
   if (route === '/') html = replaceHeroMedia(html, relative('public/_assets'));
   if (route === '/') html = injectFaqMarkup(html);
+  if (route === '/') html = injectServicesCarousel(html, relative('public/_assets'));
   if (route === processArticleRoute) html = injectProcessArticle(html);
   html = html.replace(/<([a-z][\w-]*)([^>]*?)style="([^"]*)"([^>]*)>/gi, (tag, name, before, style, after) => {
     if (!/opacity:\s*0(?:\.001)?(?:;|$)/.test(style)) return tag;
@@ -63,24 +93,19 @@ for (const route of manifest.routes) {
     ${route === '/' ? meetDevsStyles : ''}
     ${route === '/' ? logoLoopStyles : ''}
     ${route === '/' ? heroEffectsStyles : ''}
+    ${route === '/' ? servicesCarouselStyles : ''}
     ${route === '/' ? heroMediaStyles : ''}
     ${route === processArticleRoute ? processArticleStyles : ''}
     ${closingFooterStyles}
+    ${dispatchCardStyles}
     ${siteCanvasStyles}
-    ${navigationStyles}
     .framer-chdyiw-container{display:none!important}
+${route === processArticleRoute ? '' : '#main footer[data-framer-name="CTA+Newsletter"]{display:none!important}'}
     [data-framer-appear-id]{opacity:1;transform:none}
     [data-framer-component-type="RichTextContainer"] span{opacity:1;transform:none}
     #main [style*="blur("]{filter:none!important}
-    [data-framer-name="NavBar"]{position:fixed!important;top:0!important;left:0!important;transform:none!important;width:100%!important;z-index:1000!important}
-    [data-framer-name="NavBar"] [style*="transform"]{transform:none}
-    #main [data-framer-name="NavBar"].preview-menu-open nav{height:auto!important;overflow:hidden!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important}
-    #main [data-framer-name="NavBar"].preview-menu-open nav > [data-framer-name="Menu"]{height:80px!important;min-height:80px!important;width:100%!important;flex:none!important;align-items:center!important}
     [data-framer-name="Portfolio"] [data-framer-name="Logo"]{opacity:0!important;transition:opacity .2s}
     [data-framer-name="Portfolio"] a:hover [data-framer-name="Logo"]{opacity:1!important}
-    [data-framer-name="NavBar"] [data-framer-name="Open"]{display:none!important}
-    #main [data-framer-name="NavBar"].preview-menu-open [data-framer-name="Open"]{display:flex!important;position:relative!important;inset:auto!important;height:auto!important;max-height:calc(100dvh - 80px)!important;background:transparent!important;z-index:100!important;opacity:1;transform:none!important;overflow-y:auto!important}
-    @media(max-width:809.98px){#main [data-framer-name="NavBar"].preview-menu-open [data-framer-name="Open"]{padding:16px!important}}
     [data-framer-name="Portfolio"] a .framer-1n7o0vy{transition:filter .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1);transform-origin:center}
     #main [data-framer-name="Portfolio"] a:is(:hover,:focus-visible) .framer-1n7o0vy{filter:blur(4px)!important;transform:scale(1.1)}
     .framer--carousel{scroll-behavior:smooth;scrollbar-width:none;cursor:grab}
@@ -90,7 +115,7 @@ for (const route of manifest.routes) {
     #preview-help a{color:inherit;text-decoration:underline}
   </style>`;
   const launcher = relative('Start Preview.cmd');
-  const footer = closingFooterMarkup({
+  const links = {
     homeHref: relative(routeFile('/')),
     projectsHref: relative(routeFile('/projects')),
     aboutHref: relative(routeFile('/about')),
@@ -98,16 +123,48 @@ for (const route of manifest.routes) {
     contactHref: relative(routeFile('/contact')),
     privacyHref: relative('preview/privacy/index.html'),
     termsHref: relative('preview/terms/index.html'),
-  });
-  html = html.replace('</head>', styles + '</head>').replace('</body>', `${footer}
+  };
+  const footer = closingFooterMarkup({ ...links, footerEffectsSrc: relative('public/footer-magnet-lines.js') });
+  html = html.replace('</head>', styles + (route === '/' ? `<link rel="stylesheet" href="${relative('public/services-carousel.css')}">` : '') + '</head>').replace('</body>', `${footer}
     <script src="${relative('static-preview.js')}"></script>
     ${route === '/' ? heroMediaRuntime(relative('public/_assets')) : ''}
     ${route === '/' ? `<script src="${relative('public/dev-flip.js')}"></script>` : ''}
     ${route === '/' ? `<script src="${relative('public/logo-loop.js')}"></script>` : ''}
+${route === '/' ? `    <script src="${relative('public/hero-aurora-bars.js')}"></script>` : ''}
     ${route === '/' ? `<script src="${relative('public/studio-metrics.js')}"></script>` : ''}
+    ${route === '/' ? `<script src="${relative('public/services-carousel.js')}"></script>` : ''}
     <script src="${relative('public/scroll-motion.js')}"></script>
     ${route === processArticleRoute ? `<script src="${relative('public/process-article.js')}"></script>` : ''}
+    <script>${dispatchRuntime(relative('public/_assets'))}</script>
     <script src="${relative('public/ratio-runtime.js')}" data-asset-base="${relative('public/_assets')}" data-contact="${relative(routeFile('/contact'))}"></script></body>`);
+  html = injectStaggeredMenu(html, { links, assetBase: relative('public/_assets'), gsapSrc: relative('public/gsap.min.js'), menuSrc: relative('public/staggered-menu.js'), currentRoute: route });
+  await mkdir(directory, { recursive: true });
+  await writeFile(output, html);
+}
+{
+  const route = onlinePresenceRoute;
+  const output = routeFile(route);
+  const directory = path.dirname(output);
+  const relative = target => path.relative(directory, target).replaceAll('\\', '/') || './';
+  const links = {
+    homeHref: relative(routeFile('/')),
+    projectsHref: relative(routeFile('/projects')),
+    aboutHref: relative(routeFile('/about')),
+    blogHref: relative(routeFile('/blog')),
+    contactHref: relative(routeFile('/contact')),
+    privacyHref: relative('preview/privacy/index.html'),
+    termsHref: relative('preview/terms/index.html'),
+  };
+  const footer = closingFooterMarkup({ ...links, footerEffectsSrc: relative('public/footer-magnet-lines.js') });
+  let html = renderOnlinePresenceArticle(relative('public/_assets'));
+  html = html.replace('</head>', `<style>${spaceGroteskStyles(relative('public/_assets'))}${onlinePresenceArticleStyles}${closingFooterStyles}</style></head>`);
+  html = html.replaceAll('href="/"', `href="${relative(routeFile('/'))}"`)
+    .replaceAll('href="/projects"', `href="${relative(routeFile('/projects'))}"`)
+    .replaceAll('href="/about"', `href="${relative(routeFile('/about'))}"`)
+    .replaceAll('href="/blog"', `href="${relative(routeFile('/blog'))}"`)
+    .replaceAll('href="/contact"', `href="${relative(routeFile('/contact'))}"`)
+    .replace('</body>', `${footer}<script src="${relative('public/scroll-motion.js')}"></script><script src="${relative('public/ratio-runtime.js')}" data-asset-base="${relative('public/_assets')}" data-contact="${relative(routeFile('/contact'))}"></script></body>`);
+  html = injectStaggeredMenu(html, { links, assetBase: relative('public/_assets'), gsapSrc: relative('public/gsap.min.js'), menuSrc: relative('public/staggered-menu.js'), currentRoute: route });
   await mkdir(directory, { recursive: true });
   await writeFile(output, html);
 }
@@ -125,6 +182,7 @@ for (const kind of ['privacy', 'terms']) {
     termsHref: relative('preview/terms/index.html'),
   };
   await mkdir(directory, { recursive: true });
-  await writeFile(output, renderLegalPage(kind, links, relative('public/_assets'), relative('public/scroll-motion.js')));
+  const html = injectStaggeredMenu(renderLegalPage(kind, { ...links, footerEffectsSrc: relative('public/footer-magnet-lines.js') }, relative('public/_assets'), relative('public/scroll-motion.js')), { links, assetBase: relative('public/_assets'), gsapSrc: relative('public/gsap.min.js'), menuSrc: relative('public/staggered-menu.js'), currentRoute: `/${kind}` });
+  await writeFile(output, html);
 }
 console.log('Built ' + (manifest.routes.length + 2 - excludedProjects.size) + ' standalone visual previews and ' + excludedProjects.size + ' project redirects.');

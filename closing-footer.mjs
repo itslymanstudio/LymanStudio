@@ -1,9 +1,12 @@
+import { showProjects } from './site-features.mjs';
+
 const contactEmail = 'xeo776@gmail.com';
 
-export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHref, contactHref, privacyHref, termsHref }) {
+export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHref, contactHref, privacyHref, termsHref, footerEffectsSrc = '/footer-magnet-lines.js' }) {
   return `<footer class="ratio-footer" aria-labelledby="ratio-footer-title">
     <div class="ratio-footer__contact">
       <div class="ratio-footer__pitch">
+        <div class="ratio-footer__magnet" data-footer-magnet-lines aria-hidden="true"></div>
         <p class="ratio-footer__eyebrow">Have a project in mind?</p>
         <h2 class="ratio-footer__headline" id="ratio-footer-title"><span>Let's make</span><span>something.</span></h2>
         <div class="ratio-footer__contact-line">
@@ -51,16 +54,21 @@ export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHre
       </div>
     </div>
     <div class="ratio-footer__bottom">
-      <a class="ratio-footer__brand" href="${homeHref}">Ratio Design®</a>
+      <a class="ratio-footer__brand" href="${homeHref}">Lyman Studio</a>
       <nav aria-label="Footer navigation">
-        <a href="${projectsHref}">Projects</a>
+        ${showProjects ? `<a href="${projectsHref}">Projects</a>` : ''}
         <a href="${aboutHref}">About</a>
         <a href="${blogHref}">Blog</a>
         <a href="${contactHref}">Contact</a>
       </nav>
-      <div class="ratio-footer__legal"><a href="${privacyHref}">Privacy Policy</a><a href="${termsHref}">Terms &amp; Conditions</a><span>© 2026 Ratio Design</span></div>
+      <div class="ratio-footer__legal"><a href="${privacyHref}">Privacy Policy</a><a href="${termsHref}">Terms &amp; Conditions</a><span>© 2026 Lyman Studio</span></div>
     </div>
-  </footer>`;
+  </footer><script>(()=>{
+    const host=document.querySelector('[data-footer-magnet-lines]');
+    if(!host)return;
+    const load=()=>{if(document.querySelector('script[data-footer-effects]'))return;const css=document.createElement('link');css.rel='stylesheet';css.href=${JSON.stringify(footerEffectsSrc.replace(/\.js$/, '.css'))};document.head.append(css);const script=document.createElement('script');script.src=${JSON.stringify(footerEffectsSrc)};script.dataset.footerEffects='';document.body.append(script)};
+    if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){observer.disconnect();load()}},{rootMargin:'250px'});observer.observe(host)}else load();
+  })()</script>`;
 }
 
 export const closingFooterStyles = `
@@ -87,12 +95,17 @@ export const closingFooterStyles = `
     align-items: stretch;
   }
   .ratio-footer__pitch {
+    position: relative;
+    isolation: isolate;
     min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
   }
+  .ratio-footer__magnet { position: absolute; inset: 36px -8px 46px; z-index: 0; opacity: .2; pointer-events: none; overflow: hidden; }
+  .ratio-footer__magnet .magnetLines-container { width: 100%; height: 100%; }
+  .ratio-footer__eyebrow, .ratio-footer__headline, .ratio-footer__contact-line { position: relative; z-index: 1; }
   .ratio-footer__eyebrow {
     margin: 0;
     color: var(--footer-lime);

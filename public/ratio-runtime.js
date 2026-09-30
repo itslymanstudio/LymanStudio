@@ -6,14 +6,15 @@
   const symbol = 'hcIRUi1qFh8aGDJENXamzOak3Z8.svg';
   const wordmark = 'MYaL4AWEDy6afpn3WmSVtWlXFjM.svg';
   const replaceText = value => value
-    .replaceAll('Bungee - Creative Agency Framer Templte', 'Ratio Design - Creative Studio')
-    .replaceAll(' - Knots Subscription Digital Agency Framer Template', ' | Ratio Design')
-    .replaceAll('Striking, stylish, and made to stand out. Bungee is a sleek and contemporary template crafted for creative studios, freelancers, and agencies who know that powerful work needs powerful presentation.', 'Ratio Design is a creative studio building distinctive brands and digital experiences.')
+    .replaceAll('Bungee - Creative Agency Framer Templte', 'Lyman Studio - Creative Studio')
+    .replaceAll(' - Knots Subscription Digital Agency Framer Template', ' | Lyman Studio')
+    .replaceAll('Striking, stylish, and made to stand out. Bungee is a sleek and contemporary template crafted for creative studios, freelancers, and agencies who know that powerful work needs powerful presentation.', 'Lyman Studio is a creative studio building distinctive brands and digital experiences.')
     .replaceAll('Creative studio based in Gotham.', 'Creative studio based in Bangalore.')
-    .replaceAll('Bungee', 'Ratio Design')
-    .replaceAll('BUNGEE', 'RATIO DESIGN')
+    .replaceAll('Bungee', 'Lyman Studio')
+    .replaceAll('BUNGEE', 'LYMAN STUDIO')
     .replaceAll('hi@bungee.io', 'xeo776@gmail.com')
-    .replaceAll('©25 Ratio Design®', '©26 Ratio Design®');
+    .replaceAll('©25 Lyman Studio', '©26 Lyman Studio')
+    .replaceAll('Lyman Studio®', 'Lyman Studio');
   const update = root => {
     if (!root) return;
     if (root.nodeType === Node.TEXT_NODE) {
@@ -26,8 +27,8 @@
       if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE') continue;
       if (element.tagName === 'IMG') {
         const src = element.getAttribute('src') || '';
-        if (src.includes(symbol)) element.setAttribute('src', `${base}/ratio-symbol.svg`);
-        else if (src.includes(wordmark)) element.setAttribute('src', `${base}/ratio-wordmark.svg`);
+        if (src.includes(symbol)) element.setAttribute('src', `${base}/lymen-symbol.svg`);
+        else if (src.includes(wordmark)) element.setAttribute('src', `${base}/lymen-wordmark.svg`);
       }
       if (element.tagName === 'A' && /^mailto:hi@bunhee\.io$/i.test(element.getAttribute('href') || '')) element.setAttribute('href', 'mailto:xeo776@gmail.com');
       for (const name of ['aria-label', 'title', 'alt']) {
@@ -60,7 +61,7 @@
   });
   observer.observe(document.documentElement, { childList: true, characterData: true, attributes: true, attributeFilter: ['src', 'href', 'alt', 'title', 'aria-label'], subtree: true });
 })();
-// The contact form is a visual preview until Ratio Design connects a receiver.
+// The contact form is a visual preview until Lyman Studio connects a receiver.
 document.addEventListener('submit', event => {
   const form = event.target;
   if (!form.matches?.('.ratio-footer__form')) return;

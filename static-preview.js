@@ -36,36 +36,6 @@ for(const list of document.querySelectorAll('ul:has(> .ticker-item)')){
   new ResizeObserver(start).observe(list);tickerVisibility.observe(list);start();
 }
 
-// Reference style translucent menu panel with staggered links and keyboard support.
-for(const nav of document.querySelectorAll('[data-framer-name="NavBar"]')){
-  let isOpen=false,closing=false;
-  const toggles=[...nav.querySelectorAll('[data-framer-name="Hamburger"]')];
-  const panels=[...nav.querySelectorAll('[data-framer-name="Open"]')];
-  const setOpen=async value=>{
-    if(closing||value===isOpen)return;
-    isOpen=value;toggles.forEach(toggle=>toggle.setAttribute('aria-expanded',String(value)));
-    if(value){
-      nav.classList.add('preview-menu-open');
-      panels.forEach(panel=>{
-        animate(panel,[{opacity:0,clipPath:'inset(0 0 100% 0)'},{opacity:1,clipPath:'inset(0)'}],{duration:650});
-        panel.querySelectorAll('a').forEach((link,i)=>animate(link,[{opacity:0,transform:'translateY(-24px)'},{opacity:1,transform:'none'}],{delay:100+i*45,duration:550}));
-      });
-    }else{
-      closing=true;
-      await Promise.all(panels.map(panel=>animate(panel,[{opacity:1,clipPath:'inset(0)'},{opacity:0,clipPath:'inset(0 0 100% 0)'}],{duration:350})?.finished.catch(()=>{})));
-      nav.classList.remove('preview-menu-open');closing=false;
-    }
-    for(const toggle of toggles)[...toggle.querySelectorAll('[data-framer-name="Line"]')].forEach((line,i)=>{line.style.transition=reduced.matches?'none':`transform 450ms ${ease}`;line.style.transform=value?`rotate(${i?'-':''}45deg)`:`rotate(${i?90:0}deg)`;});
-  };
-  for(const toggle of toggles){
-    toggle.querySelectorAll('[data-framer-name="Line"]').forEach((line,i)=>{Object.assign(line.style,{position:'absolute',width:'32px',height:'2px',left:'0px',top:'calc(50% - 1px)',transform:`rotate(${i?90:0}deg)`});});
-    toggle.tabIndex=0;toggle.setAttribute('role','button');toggle.setAttribute('aria-label','Toggle navigation');toggle.setAttribute('aria-expanded','false');
-    toggle.addEventListener('click',()=>setOpen(!isOpen));
-    toggle.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();setOpen(!isOpen);}});
-  }
-  document.addEventListener('keydown',event=>{if(event.key==='Escape')setOpen(false);});
-}
-
 // Expandable FAQ answers preserve the reference content and rotating indicators.
 for(const faq of document.querySelectorAll('[data-framer-name="FAQ"]')){
   const items=[...faq.querySelectorAll('[class*="-item-"]')].filter(e=>e.children.length===2&&e.firstElementChild.querySelector('img'));

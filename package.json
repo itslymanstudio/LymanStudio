@@ -4,19 +4,31 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:deploy": "node scripts/build-deployment.mjs",
+    "build:services": "node scripts/build-services-carousel.mjs",
+    "build:blog-covers": "node scripts/build-blog-covers.mjs",
+    "build:footer": "node scripts/build-footer-effects.mjs",
+    "prestart": "npm run build:services && npm run build:blog-covers && npm run build:footer",
+    "predev": "npm run build:services && npm run build:blog-covers && npm run build:footer",
     "start": "node server.mjs",
     "dev": "node server.mjs",
-    "build": "node scripts/mirror.mjs && node scripts/build-static-preview.mjs",
+    "build": "node scripts/build-deployment.mjs",
+    "refresh:mirror": "node scripts/mirror.mjs && node scripts/build-static-preview.mjs",
     "build:preview": "node scripts/build-static-preview.mjs",
     "test:typography": "node scripts/check-type-system.mjs",
     "test:footer": "node scripts/check-footer.mjs"
   },
   "devDependencies": {
-    "playwright": "^1.63.0"
+    "esbuild": "^0.28.2",
+    "playwright": "^1.63.0",
+    "sharp": "^0.35.5"
   },
   "dependencies": {
     "@fontsource-variable/space-grotesk": "^5.3.0",
     "@fontsource/dm-mono": "^5.3.0",
+    "gsap": "^3.15.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "simple-icons": "^16.32.0"
   }
 }

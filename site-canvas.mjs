@@ -1,5 +1,8 @@
+import { showProjects } from './site-features.mjs';
+
 // One warm-neutral canvas across the site; media and artwork retain their own colors.
 export const siteCanvasStyles = `
+  ${showProjects ? '' : '#main [data-framer-name="Portfolio"], #main [data-framer-name="Works"], #main a[href*="projects"] { display: none !important; }'}
   :root { --ratio-paper: #f3f0e9; }
   html, body, #main, #main .framer-JN024 { background-color: var(--ratio-paper) !important; }
   #main [data-framer-name="Meet the Devs"],
