@@ -66,7 +66,10 @@
 // to the address configured in the Web3Forms dashboard.
 const WEB3FORMS_ACCESS_KEY = 'd192bf8e-509e-4fa7-a63c-3093da5150a5';
 
-document.addEventListener('submit', async event => {
+// Use a window-capture listener: the mirrored Framer runtime binds its own submit
+// handler on document (capture) and stops propagation, so a document listener here
+// would never run. window capture fires first and lets us take over the submit.
+window.addEventListener('submit', async event => {
   const form = event.target;
   if (!form.matches?.('.ratio-footer__form')) return;
   event.preventDefault();
