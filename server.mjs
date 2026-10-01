@@ -21,7 +21,7 @@ import { heroMediaStyles, heroMediaRuntime, replaceHeroMedia } from './hero-medi
 import { injectStaggeredMenu } from './staggered-menu.mjs';
 import { renderLegalPage } from './legal-pages.mjs';
 import { renderAboutPage } from './about-page.mjs';
-import { dispatchPosts, dispatchRuntime, dispatchCardStyles, onlinePresenceRoute, renderOnlinePresenceArticle, replaceBlogCovers } from './blog-dispatch.mjs';
+import { dispatchPosts, dispatchRuntime, dispatchCardStyles, renderArticle, replaceBlogCovers } from './blog-dispatch.mjs';
 const root = fileURLToPath(new URL('./public/', import.meta.url)).replace(/[\\/]$/, '');
 const production = process.env.NODE_ENV === 'production';
 const assetAliases = await readFile(path.join(root, 'deployment-assets.json'), 'utf8').then(JSON.parse).catch(() => ({}));
@@ -78,9 +78,12 @@ export async function requestHandler(req, res) {
       res.writeHead(302, { Location: '/blog', 'Cache-Control': 'no-cache' });
       return res.end();
     }
-    if (url.pathname.replace(/\/$/, '') === onlinePresenceRoute) {
-      const article = injectStaggeredMenu(renderOnlinePresenceArticle('/_assets').replace('</head>', `<style>${spaceGroteskStyles('/_assets')}${closingFooterStyles}</style></head>`)
-        .replace('</body>', `${closingFooterMarkup(siteLinks)}<script src="/scroll-motion.js"></script><script src="/ratio-runtime.js?v=2" data-asset-base="/_assets" data-contact="/contact"></script></body>`), menuOptions(onlinePresenceRoute));
+    const articlePath = url.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+    const articlePost = dispatchPosts.find(post => articlePath === '/blog/' + post.slug);
+    if (articlePost) {
+      const articleRoute = '/blog/' + articlePost.slug;
+      const article = injectStaggeredMenu(renderArticle(articlePost, '/_assets').replace('</head>', `<style>${spaceGroteskStyles('/_assets')}${closingFooterStyles}</style></head>`)
+        .replace('</body>', `${closingFooterMarkup(siteLinks)}<script src="/scroll-motion.js"></script><script src="/ratio-runtime.js?v=2" data-asset-base="/_assets" data-contact="/contact"></script></body>`), menuOptions(articleRoute));
       const body = Buffer.from(article);
       return send(req, res, body, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
     }

@@ -10,6 +10,32 @@ export const dispatchPosts = [
     cover: 'inside-the-studio',
     originalCover: 'IdUxpWYbkXu6ud9ebMdtIIizs.png',
     coverAlt: 'Design sketches, tactile paper, and color swatches on a studio workbench',
+    deck: "A brand identity doesn't arrive fully formed. It gets built slowly, through a lot of questions, some ugly drafts, and a few honest conversations. Here's how we actually work.",
+    description: "An honest look at how a creative studio turns a jumble of ideas into a brand identity a business can own.",
+    body: [
+      { h2: 'It starts with questions, not sketches', p: [
+        "Most people picture a designer opening a laptop and drawing a logo. That's rarely where it begins. Before we touch anything visual, we ask a lot of questions, and some of them feel almost too simple. Who is this business for? What does it do that a customer would notice in the first ten seconds? If this brand vanished tomorrow, what would people actually miss? The owner usually knows the answers, but not in words they can put on a page yet. Our first job is to get those answers out of their head and onto the table.",
+        "This part isn't glamorous. It's listening, taking notes, and asking the same question twice because the first answer was the polite version. The good answers almost always hide behind the safe ones.",
+      ] },
+      { h2: 'We look around before we look inside', p: [
+        "Then we study the field. What do the competitors look like? Where does everyone in this industry tend to sound the same? A coffee roaster and a law firm fall into different habits, but inside each group you start to see the copycat patterns. We aren't looking to copy them. We're looking for the gap, the corner nobody has claimed yet. Sometimes the single most useful thing we find is a cliché we can all agree to avoid.",
+      ] },
+      { h2: 'The middle is messy on purpose', p: [
+        "After the research comes the part clients sometimes worry about, because it looks chaotic. We draw too many ideas. We pin up directions that are too safe, too strange, and occasionally too good to be true. This is the stage where it's easy to think something has gone wrong. It hasn't. A strong identity almost never shows up on the first pass. You find the right one by pushing the wrong ones out of the way.",
+        "We try to show fewer ideas than we made, not more. Ten half-baked options freeze a decision. Three real ones, each with a point of view, make it possible to react. And how you react, even when you say you don't like something, tells us a lot.",
+      ] },
+      { h2: 'We test it in the real world, not on a clean screen', p: [
+        "A logo can look perfect on a white artboard and fall apart the moment it lives anywhere real. So we put the work where it actually has to survive. On a phone at 2am. On a shop sign across a busy street. On a bill, a delivery bag, a tiny app icon, a staff t-shirt. If the idea only works when everything is neat and large, it isn't an identity yet. It's a picture of one.",
+        "This is also where a name earns its keep. A brand that's hard to spell, say, or remember will quietly lose customers at the door, and no amount of careful design fixes that.",
+      ] },
+      { h2: 'We hand over a system, not a folder', p: [
+        "When the direction is settled, we don't just email a few files and shake hands. We leave the business with a small set of rules: the colours and what each one is for, the typefaces and where they belong, how much space to keep, how the brand talks, and what not to do. Good guidelines are the difference between a brand that stays itself for five years and one that drifts into a mess the first time someone new makes a poster.",
+      ] },
+      { h2: "What we wish every client knew", p: [
+        "You don't have to come in with the answers. You just have to come in with the truth. The more honest you are about who you serve, what you charge, and where you want the business to go, the better the work gets. A brand built on a careful fiction looks fine for a season and then stops fitting. A brand built on something real has room to grow into.",
+        "The honest truth is that a standout identity isn't one clever thing. It's a lot of small, unglamorous decisions made on purpose and kept consistent long after the exciting part is over. That's the part nobody sees, and it's the part that works.",
+      ] },
+    ],
   },
   {
     slug: 'why-every-brand-needs-a-signature-visual-language',
@@ -19,6 +45,32 @@ export const dispatchPosts = [
     cover: 'signature-visual-language',
     originalCover: 'LWFDO42tuu3vRgllxVsPbZC5SMM.png',
     coverAlt: 'A coordinated visual identity across cream stationery and charcoal packaging',
+    deck: "A logo is one piece of a much bigger picture. What makes a brand feel familiar is the quiet set of visual habits wrapped around it. Here's why that matters, and how to build it.",
+    description: "Why a single logo isn't enough, and how a consistent set of visual cues makes a brand recognisable and trustworthy.",
+    body: [
+      { p: [
+        "Think about how you spot a friend's message before you even open it, just from the shape of their words or the way they use punctuation. Or how you know your regular shop from across the road before you can read the sign. You aren't noticing a logo. You're noticing a pattern of small visual cues your brain has quietly learned. Brands work exactly the same way. The reason some of them feel familiar isn't one clever mark. It's a whole language of choices that keep repeating.",
+      ] },
+      { h2: "One logo isn't enough to be remembered", p: [
+        "A lot of businesses spend real money on a logo and then treat it as the finish line. But a logo sitting alone on a white page does very little. What people actually see, over and over, is the colour around it, the font in the headings, the spacing, the kind of photographs, the shape of the buttons, the way the text talks. Take any brand you admire and cover up the logo. You can usually still tell who it is. That's a signature visual language doing its job.",
+      ] },
+      { h2: 'What the language is made of', p: [
+        "It's simpler than it sounds. A small, deliberate set of parts, each one used the same way every time.",
+        "Colour. Not just a palette, but rules for where each colour shows up and how much you use at once.",
+        "Type. A heading voice and a body voice, so your text has a tone before anyone reads a word of it.",
+        "Space and rhythm. How crowded or calm things feel. Two sites with the same colours can look completely different just because one gives its ideas room to breathe.",
+        "Shape and detail. Are corners sharp or soft? Are photos bright and candid, or moody and still? Small habits like these add up to a feel.",
+        "Voice. How the brand words things. A playful line and a serious line can sit inside the same design and pull it in opposite directions.",
+        "None of this has to be loud. The best versions are almost invisible. They just stay the same.",
+      ] },
+      { h2: 'Try this on your own brand', p: [
+        "Pull up your last five posts, your website, and anything you printed recently, and put them side by side. Do they look like they came from one place, or like five different businesses that happen to share a name? If the second one sounds familiar, you don't have a language yet, just a logo and good intentions. That gap is normal, and most small brands live in it. Closing it doesn't need a huge budget. It needs you to decide on a few rules and then keep them, even when it's easier not to.",
+      ] },
+      { h2: 'Why it quietly earns trust', p: [
+        "Consistency does something to people. When everything you put out looks and sounds like it belongs together, it feels settled and dependable, like a place that will still be there next year. When it drifts, people notice, even if they can't say why, and the brand starts to look unsure of itself. Trust is rarely won by one bold campaign. It's built by a hundred small moments that all feel the same.",
+        "That's the whole point of a signature visual language. It isn't about looking fancy. It's about being recognisable enough that people stop having to wonder whether you're the real thing.",
+      ] },
+    ],
   },
   {
     slug: onlinePresenceSlug,
@@ -28,6 +80,26 @@ export const dispatchPosts = [
     cover: 'small-business-online-presence',
     originalCover: '54E8E8YQySPyeiKzWn8fj88Vhtg.png',
     coverAlt: 'A local shop alongside its coordinated tablet and mobile storefront',
+    deck: "Your next customer is already searching for you. A simple, trustworthy place online helps them find you, believe you, and reach out.",
+    description: "A practical guide to why every small business needs a useful, trustworthy online presence, and how to start without overspending.",
+    body: [
+      { h2: "You don't need to be everywhere", p: [
+        "The first thing worth saying is that an online presence doesn't mean being on every app, posting every day, and chasing trends you only half understand. That's how small business owners end up exhausted and still invisible. It means having one dependable place that does a few jobs well. Everything else is optional.",
+      ] },
+      { h2: "The 'Instagram is enough' trap", p: [
+        "This is the objection we hear most. I have a good page, people can message me, why spend on a website? Fair question. The trouble is that a social profile is rented space. The rules change, the reach drops, an account can be locked or lost overnight, and you never fully control how it looks or what a visitor can do next. A simple website is the one corner of the internet you actually own. It's also where people go to check that you're real. Plenty of customers will skim your social, then search your name anyway to see if there's a proper site behind it.",
+      ] },
+      { h2: 'What a small business website really has to do', p: [
+        "Not much, if you get the basics right. It should say clearly who you are and what you offer, in plain words, within a few seconds. It should tell people where you are and how to reach you, with a phone number, a map, and a WhatsApp link if that's how your customers prefer to talk. It should show a little proof, some photos of real work, a couple of lines from happy customers, anything that makes you look like the steady business you are. And it should make the next step obvious: one button that books, calls, or asks for a quote. A fast page that answers those questions will beat a big site that buries them.",
+      ] },
+      { h2: 'Being found when it counts', p: [
+        "Most buying starts with a search, even for a plumber, a salon, or a tiffin service down the road. When someone in your area types what they need, you want to be the answer. A website with clear details and honest information gives you a real shot at that, in a way a single social post never will. You don't have to beat the big players everywhere. You just have to show up for the person two streets away who needs exactly what you do, today.",
+      ] },
+      { h2: 'Start small, but start', p: [
+        "You don't need a huge budget or a perfect plan to begin. A simple, mobile-friendly page that loads fast and says what you do is enough to start being found and being trusted. Add things later, a booking form, a gallery, a few short notes like this one, as the business grows. The real mistake is waiting until it feels finished. It never will. Get something honest and useful online now, and let it work for you while you sleep.",
+        "If you're not sure where to start, tell us what your business does and who you serve. That's usually enough to sketch a first page together.",
+      ] },
+    ],
   },
 ];
 
@@ -189,7 +261,11 @@ export const onlinePresenceArticleStyles = `
   @media(max-width:650px){.ratio-article-page{padding:0 20px 64px}.ratio-article-nav{height:72px}.ratio-article-nav>span{display:none}.ratio-article-content{padding:90px 0 55px}.ratio-article-content h1{font-size:clamp(46px,13vw,72px)}.ratio-article-body{margin-top:64px}.ratio-article-body p{font-size:16px}}
 `;
 
+export function renderArticle(post, assetBase = '/_assets') {
+  const sections = post.body.map(block => `${block.h2 ? `<h2>${block.h2}</h2>` : ''}${block.p.map(para => `<p>${para}</p>`).join('')}`).join('');
+  return `<!doctype html><html lang="en" data-ratio-route="/blog/${post.slug}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="${post.description}"><meta property="og:image" content="${assetBase}/blog-covers/${post.cover}-1440.webp"><meta property="article:published_time" content="${post.iso}"><title>${post.title} | Lyman Studio</title><link rel="icon" href="${assetBase}/lymen-symbol.svg"><style>${onlinePresenceArticleStyles}</style></head><body><main class="ratio-article-page"><nav class="ratio-article-nav" aria-label="Main navigation"><a class="ratio-article-brand" href="/">LYMAN STUDIO</a><span>Independent creative studio · Bengaluru, India</span><div><a href="/projects">Projects</a> &nbsp; <a href="/about">About</a> &nbsp; <a href="/blog">Dispatch</a></div></nav><article class="ratio-article-content"><p class="ratio-article-eyebrow">Creative Dispatch &nbsp; / &nbsp; ${post.date}</p><h1>${post.title}</h1><p class="ratio-article-deck">${post.deck}</p>${blogCoverMarkup(post,assetBase)}<div class="ratio-article-body">${sections}</div></article></main></body></html>`;
+}
+
 export function renderOnlinePresenceArticle(assetBase = '/_assets') {
-  const post = dispatchPosts[2];
-  return `<!doctype html><html lang="en" data-ratio-route="${onlinePresenceRoute}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A practical guide to why every small business needs a useful, trustworthy online presence."><meta property="og:image" content="${assetBase}/blog-covers/${post.cover}-1440.webp"><meta property="article:published_time" content="${post.iso}"><title>${post.title} | Lyman Studio</title><link rel="icon" href="${assetBase}/lymen-symbol.svg"><style>${onlinePresenceArticleStyles}</style></head><body><main class="ratio-article-page"><nav class="ratio-article-nav" aria-label="Main navigation"><a class="ratio-article-brand" href="/">LYMAN STUDIO</a><span>Independent creative studio · Bengaluru, India</span><div><a href="/projects">Projects</a> &nbsp; <a href="/about">About</a> &nbsp; <a href="/blog">Dispatch</a></div></nav><article class="ratio-article-content"><p class="ratio-article-eyebrow">Creative Dispatch &nbsp; / &nbsp; ${post.date}</p><h1>${post.title}</h1><p class="ratio-article-deck">Your next customer is already looking online. A clear, credible presence helps them find you, understand what you do, and feel confident getting in touch.</p>${blogCoverMarkup(post,assetBase)}<div class="ratio-article-body"><p>A small business does not need to be everywhere on the internet. It does need a dependable place where people can find the right information, see the quality of its work, and take the next step. A thoughtfully designed website can do that around the clock, even when you are busy running the business.</p><h2>Be easy to find</h2><p>People often search before they call, visit, or ask for a recommendation. A website with clear service details, location information, and useful answers gives search engines and potential customers a better picture of your business. For a Bengaluru business, that could mean making your neighbourhood, service area, and contact options obvious from the start.</p><h2>Build trust before the first conversation</h2><p>A polished online presence gives your business room to show what makes it worth choosing: real work, honest details, customer feedback, and a consistent visual identity. It answers the questions a new customer may be hesitant to ask and helps your business feel established, even if your team is small.</p><h2>Turn interest into action</h2><p>Your site can guide visitors toward one clear next step, whether that is booking a consultation, requesting a quote, placing an order, or sending a WhatsApp message. Clear writing and a simple mobile experience make that step easier to take.</p><h2>Start with what your business needs</h2><p>You do not need a complicated platform or a huge budget to begin. Start with a fast, mobile-friendly website that explains what you offer, who you serve, and how to reach you. Add features as the business grows. The right online presence is one that makes your day-to-day work easier and gives customers a clear reason to choose you.</p><p>At Lyman Studio, we help businesses shape, build, and launch useful digital experiences. If you are ready to make your business easier to find online, tell us what you have in mind.</p></div></article></main></body></html>`;
+  return renderArticle(dispatchPosts[2], assetBase);
 }
