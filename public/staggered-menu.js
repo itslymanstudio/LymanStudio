@@ -162,7 +162,8 @@
     const scrollToTarget = () => {
       const target = document.getElementById(id);
       if (!target) return;
-      target.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'start' });
+      const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - 24);
+      window.scrollTo({ top, behavior: 'auto' });
       history.replaceState(null, '', '#' + id);
     };
     setTimeout(scrollToTarget, reduced.matches ? 0 : 420);
