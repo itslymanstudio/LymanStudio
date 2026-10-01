@@ -37,8 +37,7 @@ function mountHeroMedia(media, assetBase) {
     const videos = new Set();
     const shouldPause = () => hovered || focused || !visible || document.hidden || reduced.matches;
     const guardPlayback = event => { if (shouldPause()) event.target.pause(); };
-    // Framer also observes the original video nodes. Keep playback governed by
-    // the whole strip, including originals that are just outside its crop.
+    // Keep playback governed by the whole strip, including originals just outside its crop.
     const guardPause = event => {
       if (!shouldPause() && event.target.isConnected) event.target.play().catch(() => {});
     };
@@ -194,7 +193,7 @@ export const heroMediaStyles = `
     object-position: 50% 50% !important;
   }
   .ratio-hero-track {
-    /* Neutralize Framer's transform; the shared controller owns translate. */
+    /* The shared controller owns translate. */
     transform: none !important;
     opacity: 1 !important;
     will-change: translate;

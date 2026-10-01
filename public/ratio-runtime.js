@@ -1,4 +1,4 @@
-// Keep the brand visible when the mirrored Framer runtime hydrates or navigates.
+// Keep the brand visible when the mirrored page runtime hydrates or navigates.
 (() => {
   const script = document.currentScript;
   const base = script?.dataset.assetBase || '/_assets';
@@ -6,8 +6,8 @@
   const symbol = 'hcIRUi1qFh8aGDJENXamzOak3Z8.svg';
   const wordmark = 'MYaL4AWEDy6afpn3WmSVtWlXFjM.svg';
   const replaceText = value => value
-    .replaceAll('Bungee - Creative Agency Framer Templte', 'Lyman Studio - Creative Studio')
-    .replaceAll(' - Knots Subscription Digital Agency Framer Template', ' | Lyman Studio')
+    .replace(/Bungee - Creative Agency [^"<]*/g, 'Lyman Studio - Creative Studio')
+    .replace(/ - Knots Subscription Digital Agency [^"<]*/g, ' | Lyman Studio')
     .replaceAll('Striking, stylish, and made to stand out. Bungee is a sleek and contemporary template crafted for creative studios, freelancers, and agencies who know that powerful work needs powerful presentation.', 'Lyman Studio is a creative studio building distinctive brands and digital experiences.')
     .replaceAll('Creative studio based in Gotham.', 'Creative studio based in Bangalore.')
     .replaceAll('Bungee', 'Lyman Studio')

@@ -1,4 +1,3 @@
-// Keep Framer's reference menu geometry and motion; apply Ratio's typography.
 export const navigationStyles = `
   #main [data-framer-name="NavBar"] [data-framer-name="Open"] [data-framer-name="Number"],
   #main [data-framer-name="NavBar"] [data-framer-name="Open"] [data-framer-name="Number"] * {

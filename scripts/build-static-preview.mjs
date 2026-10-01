@@ -67,7 +67,7 @@ for (const route of manifest.routes) {
     .replaceAll('/_assets/', relative('public/_assets') + '/');
   if (route === '/') html = replaceTestimonials(html, relative('public/_assets/devs'));
   html = html.replace(/href="(\.\/[^"#?]*|\/[^"#?]*)"/g, (all, raw) => {
-    const targetRoute = new URL(raw, 'https://bungee.framer.website' + route).pathname.replace(/\/$/, '') || '/';
+    const targetRoute = new URL(raw, 'http://localhost' + route).pathname.replace(/\/$/, '') || '/';
     return previewRoutes.has(targetRoute) ? `href="${relative(routeFile(targetRoute))}"` : all;
   });
   html = rebrandHtml(html, { assetBase: relative('public/_assets'), contactHref: relative(routeFile('/contact')) });

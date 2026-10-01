@@ -62,6 +62,9 @@ for (let i = 0; i < routes.length; i++) {
     if (url.origin === origin && !path.extname(url.pathname) && !pages.has(url.pathname) && !routes.includes(url.pathname)) routes.push(url.pathname);
   }
   let output = rewrite(html, origin + route);
+  output = output.replace(/<!--\s*Made in [^>]*-->\s*/gi, '');
+  output = output.replace(/<meta\s+name=["']generator["'][^>]*>/gi, '');
+  output = output.replace(/<script>try\{if\(localStorage\.getItem\([^)]*editorbar[^)]*\)\).*?<\/script>/g, '');
   output = output.replace(/<script\b[^>]*src="https:\/\/events\.framer\.com[^>]*><\/script>/g, '');
   const standalone = path.resolve(route === '/' ? 'index.html' : `preview${route}/index.html`);
   const fileTarget = path.relative(path.join(root, route), standalone).replaceAll('\\', '/');
@@ -88,6 +91,6 @@ while (pending.length) {
   }));
   console.log(`Assets: ${count}, remaining: ${pending.length}`);
 }
-await save(path.resolve('mirror-manifest.json'), JSON.stringify({ source: origin, createdAt: new Date().toISOString(), routes: [...pages.keys()], assets: Object.fromEntries(assets), failures }, null, 2));
+await save(path.resolve('mirror-manifest.json'), JSON.stringify({ createdAt: new Date().toISOString(), routes: [...pages.keys()], failures }, null, 2));
 console.log(`Saved ${pages.size} pages and ${count} assets. Failures: ${failures.length}`);
 if (failures.length) { console.error(failures); process.exitCode = 1; }
