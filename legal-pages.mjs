@@ -86,6 +86,6 @@ export function renderLegalPage(kind, links, assetBase, motionSrc) {
       <div class="ratio-legal__rule" aria-hidden="true"></div>
       <div class="ratio-legal__layout"><nav class="ratio-legal__toc" aria-label="On this page"><p class="ratio-legal__toc-label">On this page</p>${sections.map(section => `<a href="#${section.id}">${section.heading}</a>`).join('')}</nav>
       <div class="ratio-legal__content">${sections.map(section => `<section class="ratio-legal__section" id="${section.id}"><h2>${section.heading}</h2><p>${section.body}</p></section>`).join('')}</div></div>
-    </main>${footer}<script src="${motionSrc}"></script><script src="${assetBase === '/_assets' ? '/ratio-runtime.js' : '../../public/ratio-runtime.js'}" data-asset-base="${assetBase}" data-contact="${links.contactHref}"></script>
+    </main>${footer}<script src="${motionSrc}"></script><script src="${assetBase === '/_assets' ? '/ratio-runtime.js?v=2' : '../../public/ratio-runtime.js'}" data-asset-base="${assetBase}" data-contact="${links.contactHref}"></script>
   </body></html>`;
 }

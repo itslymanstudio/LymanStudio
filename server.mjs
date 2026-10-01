@@ -57,7 +57,7 @@ async function send(req, res, data, headers, file) {
 }
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.mp4': 'video/mp4', '.ico': 'image/x-icon' };
 const siteLinks = { homeHref: '/', projectsHref: '/projects', aboutHref: '/about', blogHref: '/blog', contactHref: '#contact', privacyHref: '/privacy', termsHref: '/terms' };
-const menuOptions = currentRoute => ({ links: siteLinks, assetBase: '/_assets', gsapSrc: '/gsap.min.js', menuSrc: '/staggered-menu.js', currentRoute });
+const menuOptions = currentRoute => ({ links: siteLinks, assetBase: '/_assets', gsapSrc: '/gsap.min.js', menuSrc: '/staggered-menu.js?v=2', currentRoute });
 
 export async function requestHandler(req, res) {
   try {
@@ -75,7 +75,7 @@ export async function requestHandler(req, res) {
     }
     if (url.pathname.replace(/\/$/, '') === onlinePresenceRoute) {
       const article = injectStaggeredMenu(renderOnlinePresenceArticle('/_assets').replace('</head>', `<style>${spaceGroteskStyles('/_assets')}${closingFooterStyles}</style></head>`)
-        .replace('</body>', `${closingFooterMarkup(siteLinks)}<script src="/scroll-motion.js"></script><script src="/ratio-runtime.js" data-asset-base="/_assets" data-contact="/contact"></script></body>`), menuOptions(onlinePresenceRoute));
+        .replace('</body>', `${closingFooterMarkup(siteLinks)}<script src="/scroll-motion.js"></script><script src="/ratio-runtime.js?v=2" data-asset-base="/_assets" data-contact="/contact"></script></body>`), menuOptions(onlinePresenceRoute));
       const body = Buffer.from(article);
       return send(req, res, body, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
     }
@@ -145,7 +145,7 @@ export async function requestHandler(req, res) {
       }
       html = html.replace('</body>', '<script src="/scroll-motion.js"></script></body>');
       html = html.replace('</body>', `<script>${dispatchRuntime()}</script></body>`);
-      html = html.replace('</body>', '<script src="/ratio-runtime.js" data-asset-base="/_assets" data-contact="/contact"></script></body>');
+      html = html.replace('</body>', '<script src="/ratio-runtime.js?v=2" data-asset-base="/_assets" data-contact="/contact"></script></body>');
       html = injectStaggeredMenu(html, menuOptions(home ? '/' : url.pathname.replace(/\/$/, '')));
       data = Buffer.from(html);
     }
