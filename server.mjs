@@ -58,88 +58,10 @@ async function send(req, res, data, headers, file) {
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.mp4': 'video/mp4', '.ico': 'image/x-icon' };
 const siteLinks = { homeHref: '/', projectsHref: '/projects', aboutHref: '/about', blogHref: '/blog', contactHref: '/contact', privacyHref: '/privacy', termsHref: '/terms' };
 const menuOptions = currentRoute => ({ links: siteLinks, assetBase: '/_assets', gsapSrc: '/gsap.min.js', menuSrc: '/staggered-menu.js', currentRoute });
-const contactRecipient = 'itslymanstudio@gmail.com';
-const contactRateLimit = new Map();
-
-function sendJson(res, status, payload) {
-  const body = Buffer.from(JSON.stringify(payload));
-  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Length': body.length });
-  res.end(body);
-}
-
-async function handleContact(req, res) {
-  if (req.method !== 'POST') return sendJson(res, 405, { error: 'Use POST to send an enquiry.' });
-  const apiKey = process.env.RESEND_API_KEY;
-  const sender = process.env.RESEND_FROM_EMAIL;
-  if (!apiKey || !sender) return sendJson(res, 503, { error: 'Email delivery is not configured yet.' });
-
-  const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').toString().split(',')[0].trim();
-  const now = Date.now();
-  const recent = (contactRateLimit.get(ip) || []).filter(timestamp => now - timestamp < 10 * 60_000);
-  if (recent.length >= 5) return sendJson(res, 429, { error: 'Too many enquiries. Please try again in a few minutes.' });
-
-  let raw = '';
-  for await (const chunk of req) {
-    raw += chunk;
-    if (raw.length > 12_000) return sendJson(res, 413, { error: 'Your enquiry is too long.' });
-  }
-
-  let input;
-  try { input = JSON.parse(raw); }
-  catch { return sendJson(res, 400, { error: 'Please check the form and try again.' }); }
-
-  // Quietly accept automated submissions caught by the hidden honeypot.
-  if (typeof input.website === 'string' && input.website.trim()) return sendJson(res, 200, { ok: true });
-
-  const field = (name, max) => typeof input[name] === 'string' ? input[name].trim().slice(0, max) : '';
-  const name = field('full_name', 120);
-  const email = field('email', 254);
-  const phone = field('phone', 60);
-  const region = field('region', 80);
-  const companyType = field('company_type', 100);
-  const brief = field('project_brief', 4_000);
-  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !brief) {
-    return sendJson(res, 400, { error: 'Please enter your name, a valid email address, and a project brief.' });
-  }
-
-  const subjectName = name.replace(/[\r\n]+/g, ' ');
-  const text = [
-    'New project enquiry from the Lyman Studio website',
-    '',
-    `Name: ${name}`,
-    `Email: ${email}`,
-    `Phone: ${phone || 'Not provided'}`,
-    `Region: ${region || 'Not provided'}`,
-    `Company type: ${companyType || 'Not provided'}`,
-    '',
-    'Project brief:',
-    brief
-  ].join('\n');
-
-  try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: sender,
-        to: [contactRecipient],
-        reply_to: email,
-        subject: `New project enquiry from ${subjectName}`,
-        text
-      })
-    });
-    if (!response.ok) return sendJson(res, 502, { error: 'The email service could not accept your enquiry. Please try again or email us directly.' });
-    contactRateLimit.set(ip, [...recent, now]);
-    return sendJson(res, 200, { ok: true });
-  } catch {
-    return sendJson(res, 502, { error: 'The email service is temporarily unavailable. Please try again or email us directly.' });
-  }
-}
 
 export async function requestHandler(req, res) {
   try {
     const url = new URL(req.url, 'http://localhost');
-    if (url.pathname === '/api/contact') return await handleContact(req, res);
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); return res.end('Preview only'); }
     if (!showProjects && /^\/projects(?:\/|$)/.test(url.pathname)) {
       res.writeHead(302, { Location: '/', 'Cache-Control': 'no-cache' });

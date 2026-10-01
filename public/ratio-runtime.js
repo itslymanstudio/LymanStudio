@@ -61,6 +61,11 @@
   });
   observer.observe(document.documentElement, { childList: true, characterData: true, attributes: true, attributeFilter: ['src', 'href', 'alt', 'title', 'aria-label'], subtree: true });
 })();
+
+// Web3Forms public access key (safe for client-side use). Submissions are emailed
+// to the address configured in the Web3Forms dashboard.
+const WEB3FORMS_ACCESS_KEY = 'd192bf8e-509e-4fa7-a63c-3093da5150a5';
+
 document.addEventListener('submit', async event => {
   const form = event.target;
   if (!form.matches?.('.ratio-footer__form')) return;
@@ -100,13 +105,23 @@ document.addEventListener('submit', async event => {
   }
   status.textContent = 'Sending your enquiry…';
   try {
-    const response = await fetch('/api/contact', {
+    const response = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fields)
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_ACCESS_KEY,
+        subject,
+        from_name: 'Lyman Studio website',
+        name: fields.full_name || '',
+        email: fields.email || '',
+        phone: fields.phone || 'Not provided',
+        region: fields.region || 'Not provided',
+        company_type: fields.company_type || 'Not provided',
+        project_brief: fields.project_brief || ''
+      })
     });
     const result = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(result.error || 'Your enquiry could not be sent right now.');
+    if (!response.ok || !result.success) throw new Error(result.message || 'Your enquiry could not be sent right now.');
     form.reset();
     status.textContent = 'Thanks, your enquiry has been sent. We’ll be in touch soon.';
   } catch (error) {
