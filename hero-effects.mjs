@@ -1,5 +1,6 @@
 // Light motion for the existing hero; media sources are swapped separately.
 export const heroEffectsStyles = `
+  html[data-ratio-route="/"] #main [data-framer-name="NavBar"] [data-framer-name="Horizontal"] { display: none !important; }
   html[data-ratio-route="/"] header[data-framer-name="Header"] a[data-framer-name="Black Full"] {
     display: flex !important;
     align-items: center !important;
