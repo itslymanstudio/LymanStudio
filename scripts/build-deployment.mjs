@@ -9,6 +9,7 @@ import { buildServicesCarousel } from './build-services-carousel.mjs';
 import { buildBlogCovers } from './build-blog-covers.mjs';
 import { dispatchPosts } from '../blog-dispatch.mjs';
 import { heroMedia } from '../hero-media.mjs';
+import { siteCanvasStyles } from '../site-canvas.mjs';
 
 const project = path.resolve('.');
 const output = path.join(project,'dist');
@@ -80,7 +81,13 @@ for (const file of await files('public')) {
     const route = relative === 'index.html' ? '/' : '/'+relative.slice(0,-'/index.html'.length);
     if (!routes.includes(route)) continue;
   }
-  const bytes = await readFile(file);
+  let bytes = await readFile(file);
+  if (path.extname(file).toLowerCase() === '.html') {
+    const html = bytes.toString('utf8');
+    if (!html.includes('data-lyman-spacing')) {
+      bytes = Buffer.from(html.replace('</head>', `<style data-lyman-spacing>${siteCanvasStyles}</style></head>`));
+    }
+  }
   let deployedRelative = 'public/'+relative;
   if (path.extname(file).toLowerCase() === '.png') {
     const webp = await sharp(bytes).keepMetadata().webp({lossless:true,effort:6}).toBuffer();
