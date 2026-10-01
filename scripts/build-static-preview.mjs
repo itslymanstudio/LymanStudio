@@ -59,6 +59,15 @@ for (const route of manifest.routes) {
     await writeFile(output, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${blogHref}"><title>Creative Dispatch | Lyman Studio</title></head><body><a href="${blogHref}">View Creative Dispatch</a></body></html>`);
     continue;
   }
+  // Contact now lives in the shared footer, so the old standalone route
+  // should send static previews back to that section instead of reading a
+  // removed public/contact/index.html file.
+  if (route === '/contact') {
+    const homeHref = relative(routeFile('/')) + '#contact';
+    await mkdir(directory, { recursive: true });
+    await writeFile(output, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${homeHref}"><title>Contact | Lyman Studio</title></head><body><a href="${homeHref}">Contact Lyman Studio</a></body></html>`);
+    continue;
+  }
   let html = await readFile(path.join('public', route, 'index.html'), 'utf8');
   // A file:// document cannot import the published ES modules. This visual
   // fallback keeps the original server-rendered content and local media.
