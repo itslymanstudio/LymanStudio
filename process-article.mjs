@@ -16,6 +16,7 @@ export const processArticleMarkup = `<section class="ratio-process" aria-labelle
       <p class="ratio-process__lead">Seven clear steps, from the first conversation to a website ready for the world.</p>
     </header>
     <div class="ratio-process__track">
+      <div class="ratio-process__rail" aria-hidden="true"><span class="ratio-process__fill"></span><span class="ratio-process__cursor"></span></div>
       <ol class="ratio-process__steps">
         ${steps.map(({ title, description, note }, index) => `<li class="ratio-process__step">
           <span class="ratio-process__node" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
@@ -54,16 +55,24 @@ export const processArticleStyles = `
   .ratio-process__intro h2 .ratio-process__muted { color: #8e8b84; font: inherit !important; }
   .ratio-process__lead { max-width: 31ch; margin: 30px 0 0; color: #5a5955; font: 400 18px/1.45 var(--font-main) !important; letter-spacing: -.02em !important; }
   .ratio-process__steps { margin: 0; padding: 0; list-style: none; }
+  .ratio-process__track { position: relative; }
+  .ratio-process__rail { display: none; position: absolute; left: 21px; top: var(--process-start, 22px); width: 2px; height: var(--process-length, 0px); background: #aaa7a0; pointer-events: none; }
+  .ratio-process.has-progress .ratio-process__rail { display: block; }
+  .ratio-process.has-progress .ratio-process__step::before { display: none; }
+  .ratio-process__fill { position: absolute; inset: 0 0 auto; height: var(--process-fill, 0px); background: #c8ff31; }
+  .ratio-process__cursor { position: absolute; left: 50%; top: var(--process-fill, 0px); width: 14px; height: 14px; border-radius: 50%; background: #c8ff31; box-shadow: 0 0 0 5px #c8ff3126; transform: translate(-50%, -50%); opacity: var(--process-active, 0); z-index: 3; }
   .ratio-process__step, .ratio-process__cta-row { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 22px; position: relative; }
   .ratio-process__step { min-height: 166px; padding: 0 0 50px; }
   .ratio-process__step::before { content: ""; position: absolute; left: 21px; top: 44px; bottom: 0; width: 1px; background: #aaa7a0; transform-origin: top; }
   .ratio-process__node, .ratio-process__cta-node { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #101010; border-radius: 50%; font: 400 11px/1 var(--font-mono) !important; flex: none; }
+  .ratio-process__node { position: relative; z-index: 2; background: #f3f0e9; }
+  .ratio-process__step.is-complete .ratio-process__node, .ratio-process__cta-row.is-complete .ratio-process__cta-node { background: #c8ff31; border-color: #c8ff31; box-shadow: 0 0 0 5px #c8ff3126; }
   .ratio-process__step-content { padding: 3px 0 0; min-width: 0; }
   .ratio-process__step h3 { margin: 0 0 13px; font: 600 clamp(27px, 2.2vw, 34px)/1 var(--font-main) !important; letter-spacing: -.055em !important; }
   .ratio-process__step-content > p:not(.ratio-process__note) { max-width: 48ch; margin: 0; color: #5a5955; font: 400 16px/1.5 var(--font-main) !important; letter-spacing: -.02em !important; }
   .ratio-process__note { display: inline-block; margin: 18px 0 0; padding: 8px 0; border-top: 1px solid #c5c3bd; color: #5a5955; }
   .ratio-process__cta-row { padding-top: 0; }
-  .ratio-process__cta-node { position: relative; z-index: 1; background: #c8ff31; border-color: #c8ff31; color: #101010; font-size: 20px !important; }
+  .ratio-process__cta-node { position: relative; z-index: 2; background: #f3f0e9; color: #101010; font-size: 20px !important; transition: background .3s ease, border-color .3s ease, box-shadow .3s ease; }
   .ratio-process__cta { min-width: 0; padding: clamp(32px, 3.8vw, 62px); border-radius: 18px; background: #101010; color: #f3f0e9; }
   .ratio-process__cta-eyebrow { margin: 0 0 34px; color: #c8ff31; }
   .ratio-process__cta h3 { margin: 0; font: 600 clamp(36px, 3.75vw, 62px)/.94 var(--font-main) !important; letter-spacing: -.075em !important; }
@@ -99,6 +108,7 @@ export const processArticleStyles = `
     .ratio-process__step, .ratio-process__cta-row { grid-template-columns: 36px minmax(0, 1fr); gap: 14px; }
     .ratio-process__node, .ratio-process__cta-node { width: 36px; height: 36px; }
     .ratio-process__step::before { left: 17px; top: 36px; }
+    .ratio-process__rail { left: 17px; }
     .ratio-process__step h3 { font-size: 26px !important; }
     .ratio-process__step-content > p:not(.ratio-process__note) { font-size: 15px !important; }
     .ratio-process__cta { padding: 27px 20px 30px; border-radius: 14px; }
@@ -112,6 +122,8 @@ export const processArticleStyles = `
     .ratio-process.is-ready :is(.ratio-process__intro, .ratio-process__step, .ratio-process__cta-row) { opacity: 1; transform: none; transition: none; }
     .ratio-process.is-ready .ratio-process__step::before { transform: none; transition: none; }
     .ratio-process__actions a { transition: none; }
+    .ratio-process__node, .ratio-process__cta-node { transition: none; }
+    .ratio-process__cursor { display: none; }
   }
 `;
 

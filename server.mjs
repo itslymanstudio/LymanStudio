@@ -20,6 +20,7 @@ import { servicesCarouselStyles, servicesCarouselMarkup } from './services-carou
 import { heroMediaStyles, heroMediaRuntime, replaceHeroMedia } from './hero-media.mjs';
 import { injectStaggeredMenu } from './staggered-menu.mjs';
 import { renderLegalPage } from './legal-pages.mjs';
+import { renderAboutPage } from './about-page.mjs';
 import { dispatchPosts, dispatchRuntime, dispatchCardStyles, onlinePresenceRoute, renderOnlinePresenceArticle, replaceBlogCovers } from './blog-dispatch.mjs';
 const root = fileURLToPath(new URL('./public/', import.meta.url)).replace(/[\\/]$/, '');
 const production = process.env.NODE_ENV === 'production';
@@ -64,6 +65,10 @@ export async function requestHandler(req, res) {
     const url = new URL(req.url, 'http://localhost');
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); return res.end('Preview only'); }
     if (url.pathname === '/contact' || url.pathname === '/contact/') { res.writeHead(302, { Location: '/#contact', 'Cache-Control': 'no-cache' }); return res.end(); }
+    if (/^\/about(?:\/index\.html|\/)?$/.test(url.pathname)) {
+      const body = Buffer.from(injectStaggeredMenu(renderAboutPage(siteLinks), menuOptions('/about')));
+      return send(req, res, body, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
+    }
     if (!showProjects && /^\/projects(?:\/|$)/.test(url.pathname)) {
       res.writeHead(302, { Location: '/', 'Cache-Control': 'no-cache' });
       return res.end();
@@ -125,7 +130,7 @@ export async function requestHandler(req, res) {
       html = html.replace('</body>', `${closingFooterMarkup(siteLinks)}</body>`);
       if (home) {
         const processMarkup = JSON.stringify(processArticleMarkup);
-        html = html.replace('</body>', `<script>(()=>{const markup=${processMarkup};const mount=()=>{const blog=document.querySelector('section[data-framer-name="Blog"]');if(blog&&!document.querySelector('.ratio-process'))blog.insertAdjacentHTML('beforebegin',markup)};new MutationObserver(mount).observe(document.documentElement,{childList:true,subtree:true});mount()})()</script><script src="/process-article.js"></script></body>`);
+        html = html.replace('</body>', `<script>(()=>{const markup=${processMarkup};const mount=()=>{const blog=document.querySelector('section[data-framer-name="Blog"]');if(blog&&!document.querySelector('.ratio-process'))blog.insertAdjacentHTML('beforebegin',markup)};new MutationObserver(mount).observe(document.documentElement,{childList:true,subtree:true});mount()})()</script><script src="/process-article.js?v=4"></script></body>`);
         html = html.replace('</head>', '<link rel="stylesheet" href="/services-carousel.css"></head>');
         const services = JSON.stringify(servicesCarouselMarkup('/_assets'));
         html = html.replace('</body>', `<script>(()=>{const markup=${services};const mount=()=>{const old=document.querySelector('section.framer-jx0221[data-framer-name="Main"]');if(old&&!document.querySelector('.ratio-services'))old.insertAdjacentHTML('afterend',markup)};new MutationObserver(mount).observe(document.documentElement,{childList:true,subtree:true});mount()})()</script><script src="/services-carousel.js"></script></body>`);

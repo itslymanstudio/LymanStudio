@@ -17,6 +17,7 @@ import { buildServicesCarousel } from './build-services-carousel.mjs';
 import { heroMediaStyles, heroMediaRuntime, replaceHeroMedia } from '../hero-media.mjs';
 import { injectStaggeredMenu } from '../staggered-menu.mjs';
 import { renderLegalPage } from '../legal-pages.mjs';
+import { renderAboutPage } from '../about-page.mjs';
 import { dispatchPosts, dispatchRuntime, dispatchCardStyles, onlinePresenceRoute, renderOnlinePresenceArticle, onlinePresenceArticleStyles, replaceBlogCovers } from '../blog-dispatch.mjs';
 import { buildBlogCovers } from './build-blog-covers.mjs';
 import { buildFooterEffects } from './build-footer-effects.mjs';
@@ -41,6 +42,21 @@ for (const route of manifest.routes) {
   const output = routeFile(route);
   const directory = path.dirname(output);
   const relative = target => path.relative(directory, target).replaceAll('\\', '/') || './';
+  if (route === '/about') {
+    const links = {
+      homeHref: relative(routeFile('/')), projectsHref: relative(routeFile('/projects')),
+      aboutHref: relative(routeFile('/about')), blogHref: relative(routeFile('/blog')),
+      contactHref: '#contact', privacyHref: relative('preview/privacy/index.html'),
+      termsHref: relative('preview/terms/index.html'), footerEffectsSrc: relative('public/footer-magnet-lines.js'),
+    };
+    const html = injectStaggeredMenu(renderAboutPage(links, relative('public/_assets'), relative('public')), {
+      links, assetBase: relative('public/_assets'), gsapSrc: relative('public/gsap.min.js'),
+      menuSrc: relative('public/staggered-menu.js'), currentRoute: route,
+    });
+    await mkdir(directory, { recursive: true });
+    await writeFile(output, html);
+    continue;
+  }
   if (!showProjects && /^\/projects(?:\/|$)/.test(route)) {
     const homeHref = relative(routeFile('/'));
     await mkdir(directory, { recursive: true });
