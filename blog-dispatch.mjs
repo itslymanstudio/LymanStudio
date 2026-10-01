@@ -249,13 +249,13 @@ export const onlinePresenceArticleStyles = `
   .ratio-article-page{min-height:100vh;background:#f3f0e9;color:#101010;padding:0 5vw 100px;font-family:var(--font-main, "Space Grotesk", sans-serif)}
   .ratio-article-nav{height:86px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #c5c3bd;font:400 11px/1.2 var(--font-mono, "DM Mono", monospace);letter-spacing:.03em;text-transform:uppercase}
   .ratio-article-nav a{color:inherit;text-decoration:none}.ratio-article-brand{font:600 21px/1 var(--font-main, "Space Grotesk",sans-serif);letter-spacing:-.08em}
-  .ratio-article-content{max-width:1040px;margin:0 auto;padding:clamp(90px,13vw,180px) 0 90px}
+  .ratio-article-content{max-width:820px;margin:0 auto;padding:clamp(90px,13vw,180px) 0 90px}
   .ratio-article-eyebrow{font:400 11px/1.3 var(--font-mono,"DM Mono",monospace);letter-spacing:.04em;text-transform:uppercase;color:#6b6963}
-  .ratio-article-content h1{max-width:1000px;margin:28px 0 30px;font:600 clamp(48px,8vw,108px)/.92 var(--font-main,"Space Grotesk",sans-serif);letter-spacing:-.085em}
-  .ratio-article-deck{max-width:730px;margin:0;color:#62605a;font:400 clamp(19px,2.3vw,27px)/1.4 var(--font-main,"Space Grotesk",sans-serif);letter-spacing:-.035em}
+  .ratio-article-content h1{max-width:none;margin:28px 0 30px;font:600 clamp(40px,7vw,76px)/.94 var(--font-main,"Space Grotesk",sans-serif);letter-spacing:-.085em}
+  .ratio-article-deck{max-width:none;margin:0;color:#62605a;font:400 clamp(19px,2.3vw,26px)/1.4 var(--font-main,"Space Grotesk",sans-serif);letter-spacing:-.035em}
   .ratio-article-cover{margin:48px 0 0;overflow:hidden;border-radius:18px;aspect-ratio:8/5;background:#e9e4da}
   .ratio-article-cover img{display:block;width:100%;height:100%;object-fit:cover}
-  .ratio-article-body{max-width:700px;margin:clamp(72px,10vw,130px) 0 0 auto}
+  .ratio-article-body{max-width:none;margin:clamp(56px,8vw,96px) 0 0}
   .ratio-article-body h2{margin:58px 0 16px;font:600 clamp(30px,4vw,46px)/.98 var(--font-main,"Space Grotesk",sans-serif);letter-spacing:-.065em}
   .ratio-article-body p{margin:0 0 22px;color:#4f4d48;font:400 18px/1.65 var(--font-main,"Space Grotesk",sans-serif);letter-spacing:-.018em}
   @media(max-width:650px){.ratio-article-page{padding:0 20px 64px}.ratio-article-nav{height:72px}.ratio-article-nav>span{display:none}.ratio-article-content{padding:90px 0 55px}.ratio-article-content h1{font-size:clamp(46px,13vw,72px)}.ratio-article-body{margin-top:64px}.ratio-article-body p{font-size:16px}}
