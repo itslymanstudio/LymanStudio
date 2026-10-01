@@ -93,7 +93,7 @@ document.addEventListener('submit', event => {
       if (element.children.length) continue;
       const label = element.textContent.trim();
       if (/^\d{1,2}:\d{2}$/.test(label) && label !== time) element.textContent = time;
-      else if (label === 'NY') element.textContent = 'BLR';
+      else if (/\bNY\b/.test(label)) element.textContent = element.textContent.replace(/\bNY\b/g, 'BLR');
     }
   };
 
