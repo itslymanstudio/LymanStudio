@@ -75,3 +75,30 @@ document.addEventListener('submit', event => {
   }
   status.textContent = 'This form is not connected yet. Please email xeo776@gmail.com to contact us.';
 }, true);
+
+// Keep the small hero location clock local to the studio in Bengaluru.
+(() => {
+  const updateBengaluruClock = () => {
+    const timer = document.querySelector('header[data-framer-name="Header"] [data-framer-name="Timer"]');
+    if (!timer) return;
+
+    const time = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23'
+    }).format(new Date());
+
+    for (const element of timer.querySelectorAll('*')) {
+      if (element.children.length) continue;
+      const label = element.textContent.trim();
+      if (/^\d{1,2}:\d{2}$/.test(label) && label !== time) element.textContent = time;
+      else if (label === 'NY') element.textContent = 'BLR';
+    }
+  };
+
+  updateBengaluruClock();
+  const header = document.querySelector('header[data-framer-name="Header"]');
+  if (header) new MutationObserver(updateBengaluruClock).observe(header, { childList: true, characterData: true, subtree: true });
+  window.setInterval(updateBengaluruClock, 30_000);
+})();
