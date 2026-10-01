@@ -34,7 +34,7 @@ export const meetDevsStyles = `
 `;
 
 export function meetDevsMarkup(assetBase) {
-  const portrait = number => `${assetBase}/person-${number}.png`;
+  const portrait = name => `${assetBase}/${name}.webp`;
   return `<section class="meet-devs" data-framer-name="Meet the Devs" aria-labelledby="meet-devs-title">
     <div class="meet-devs__inner">
       <header class="meet-devs__intro">
@@ -44,22 +44,22 @@ export function meetDevsMarkup(assetBase) {
       </header>
       <div class="meet-devs__grid">
         <article class="meet-devs__profile" data-preview-reveal="30">
-          <button class="meet-devs__flip-card" type="button" data-flipped="false" aria-pressed="false" aria-label="Read about Person 1">
+          <button class="meet-devs__flip-card" type="button" data-flipped="false" aria-pressed="false" aria-label="Read about Sujay Yadav">
             <span class="meet-devs__flip-inner">
-              <span class="meet-devs__face meet-devs__face--front"><img src="${portrait(1)}" alt="Illustrative placeholder portrait for Person 1" width="1120" height="1400" loading="lazy" draggable="false"></span>
-              <span class="meet-devs__face meet-devs__face--back" aria-hidden="true"><span class="meet-devs__back-kicker">Developer</span><span class="meet-devs__back-content"><span class="meet-devs__back-name">Person 1</span><span class="meet-devs__back-description">Turns early ideas into clear, responsive interfaces, with careful attention to layout, motion, and the details people notice.</span></span><span class="meet-devs__back-action">Click to return</span></span>
+              <span class="meet-devs__face meet-devs__face--front"><img src="${portrait('sujay-yadav')}" alt="Portrait of Sujay Yadav" width="900" height="1080" loading="lazy" draggable="false"></span>
+              <span class="meet-devs__face meet-devs__face--back" aria-hidden="true"><span class="meet-devs__back-kicker">Developer</span><span class="meet-devs__back-content"><span class="meet-devs__back-name">Sujay Yadav</span><span class="meet-devs__back-description">Turns early ideas into clear, responsive interfaces, with careful attention to layout, motion, and the details people notice.</span></span><span class="meet-devs__back-action">Click to return</span></span>
             </span><span class="meet-devs__glare" aria-hidden="true"></span>
           </button>
-          <div class="meet-devs__caption"><h3>Person 1</h3><p>Developer</p></div>
+          <div class="meet-devs__caption"><h3>Sujay Yadav</h3><p>Developer</p></div>
         </article>
         <article class="meet-devs__profile" data-preview-reveal="30">
-          <button class="meet-devs__flip-card" type="button" data-flipped="false" aria-pressed="false" aria-label="Read about Person 2">
+          <button class="meet-devs__flip-card" type="button" data-flipped="false" aria-pressed="false" aria-label="Read about Rayan Ahmad">
             <span class="meet-devs__flip-inner">
-              <span class="meet-devs__face meet-devs__face--front"><img src="${portrait(2)}" alt="Illustrative placeholder portrait for Person 2" width="1120" height="1400" loading="lazy" draggable="false"></span>
-              <span class="meet-devs__face meet-devs__face--back" aria-hidden="true"><span class="meet-devs__back-kicker">Developer</span><span class="meet-devs__back-content"><span class="meet-devs__back-name">Person 2</span><span class="meet-devs__back-description">Focuses on the foundations behind each launch: performance, accessibility, and dependable deployment from build to handoff.</span></span><span class="meet-devs__back-action">Click to return</span></span>
+              <span class="meet-devs__face meet-devs__face--front"><img src="${portrait('rayan-ahmad')}" alt="Portrait of Rayan Ahmad" width="900" height="987" loading="lazy" draggable="false"></span>
+              <span class="meet-devs__face meet-devs__face--back" aria-hidden="true"><span class="meet-devs__back-kicker">Developer</span><span class="meet-devs__back-content"><span class="meet-devs__back-name">Rayan Ahmad</span><span class="meet-devs__back-description">Focuses on the foundations behind each launch: performance, accessibility, and dependable deployment from build to handoff.</span></span><span class="meet-devs__back-action">Click to return</span></span>
             </span><span class="meet-devs__glare" aria-hidden="true"></span>
           </button>
-          <div class="meet-devs__caption"><h3>Person 2</h3><p>Developer</p></div>
+          <div class="meet-devs__caption"><h3>Rayan Ahmad</h3><p>Developer</p></div>
         </article>
       </div>
     </div>
