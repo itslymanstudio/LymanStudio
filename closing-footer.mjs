@@ -1,6 +1,6 @@
 import { showProjects } from './site-features.mjs';
 
-const contactEmail = 'xeo776@gmail.com';
+const contactEmail = 'itslymanstudio@gmail.com';
 
 export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHref, contactHref, privacyHref, termsHref, footerEffectsSrc = '/footer-magnet-lines.js' }) {
   return `<footer class="ratio-footer" aria-labelledby="ratio-footer-title">
@@ -16,6 +16,7 @@ export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHre
       <div class="ratio-footer__form-column">
         <h3 id="ratio-contact-form-title">Contact us</h3>
         <form class="ratio-footer__form" data-framer-name="Contact Form" aria-labelledby="ratio-contact-form-title">
+          <div class="ratio-footer__honeypot" aria-hidden="true"><label for="ratio-contact-website">Leave this field empty</label><input id="ratio-contact-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
           <div class="ratio-footer__field">
             <label for="ratio-contact-name">Full name</label>
             <input id="ratio-contact-name" name="full_name" type="text" autocomplete="name" placeholder="Your name" required>
@@ -159,6 +160,7 @@ export const closingFooterStyles = `
     margin-top: 27px;
     min-width: 0;
   }
+  .ratio-footer__honeypot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .ratio-footer__field { display: flex; flex-direction: column; min-width: 0; gap: 6px; }
   .ratio-footer__field label {
     color: #c3c1bb;

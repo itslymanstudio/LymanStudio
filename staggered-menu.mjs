@@ -3,7 +3,7 @@ import { showProjects } from './site-features.mjs';
 const socialItems = [
   { label: 'GitHub', href: 'https://github.com/SujayYadav776' },
   { label: 'WhatsApp', href: 'https://wa.me/917370969624' },
-  { label: 'Email', href: 'mailto:xeo776@gmail.com' },
+  { label: 'Email', href: 'mailto:itslymanstudio@gmail.com' },
 ];
 
 export const staggeredMenuStyles = `

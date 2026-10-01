@@ -12,7 +12,7 @@
     .replaceAll('Creative studio based in Gotham.', 'Creative studio based in Bangalore.')
     .replaceAll('Bungee', 'Lyman Studio')
     .replaceAll('BUNGEE', 'LYMAN STUDIO')
-    .replaceAll('hi@bungee.io', 'xeo776@gmail.com')
+    .replaceAll('hi@bungee.io', 'itslymanstudio@gmail.com')
     .replaceAll('©25 Lyman Studio', '©26 Lyman Studio')
     .replaceAll('Lyman Studio®', 'Lyman Studio');
   const update = root => {
@@ -30,7 +30,7 @@
         if (src.includes(symbol)) element.setAttribute('src', `${base}/lymen-symbol.svg`);
         else if (src.includes(wordmark)) element.setAttribute('src', `${base}/lymen-wordmark.svg`);
       }
-      if (element.tagName === 'A' && /^mailto:hi@bunhee\.io$/i.test(element.getAttribute('href') || '')) element.setAttribute('href', 'mailto:xeo776@gmail.com');
+      if (element.tagName === 'A' && /^mailto:hi@bunhee\.io$/i.test(element.getAttribute('href') || '')) element.setAttribute('href', 'mailto:itslymanstudio@gmail.com');
       for (const name of ['aria-label', 'title', 'alt']) {
         const value = element.getAttribute(name);
         if (value && /Bungee|Gotham|hi@bungee\.io/i.test(value)) element.setAttribute(name, replaceText(value));
@@ -61,8 +61,7 @@
   });
   observer.observe(document.documentElement, { childList: true, characterData: true, attributes: true, attributeFilter: ['src', 'href', 'alt', 'title', 'aria-label'], subtree: true });
 })();
-// The contact form is a visual preview until Lyman Studio connects a receiver.
-document.addEventListener('submit', event => {
+document.addEventListener('submit', async event => {
   const form = event.target;
   if (!form.matches?.('.ratio-footer__form')) return;
   event.preventDefault();
@@ -73,7 +72,52 @@ document.addEventListener('submit', event => {
     status.setAttribute('role', 'status');
     form.append(status);
   }
-  status.textContent = 'This form is not connected yet. Please email xeo776@gmail.com to contact us.';
+  const fields = Object.fromEntries(new FormData(form));
+  if (fields.website) return;
+
+  const subject = `Project enquiry from ${fields.full_name || 'website visitor'}`;
+  const body = [
+    `Name: ${fields.full_name || ''}`,
+    `Email: ${fields.email || ''}`,
+    `Phone: ${fields.phone || ''}`,
+    `Region: ${fields.region || ''}`,
+    `Company type: ${fields.company_type || ''}`,
+    '',
+    fields.project_brief || ''
+  ].join('\n');
+  if (location.protocol === 'file:') {
+    status.textContent = 'Your email app is opening with the enquiry. Press Send there to deliver it.';
+    location.href = `mailto:itslymanstudio@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    return;
+  }
+
+  const button = form.querySelector('button[type="submit"]');
+  const originalButtonText = button?.innerHTML;
+  if (button) {
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    button.textContent = 'Sending…';
+  }
+  status.textContent = 'Sending your enquiry…';
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(fields)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || 'Your enquiry could not be sent right now.');
+    form.reset();
+    status.textContent = 'Thanks, your enquiry has been sent. We’ll be in touch soon.';
+  } catch (error) {
+    status.textContent = `${error.message} You can email us directly at itslymanstudio@gmail.com.`;
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+      button.innerHTML = originalButtonText;
+    }
+  }
 }, true);
 
 // Keep the small hero location clock local to the studio in Bengaluru.

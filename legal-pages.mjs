@@ -2,7 +2,7 @@ import { closingFooterMarkup, closingFooterStyles } from './closing-footer.mjs';
 import { spaceGroteskStyles } from './typography.mjs';
 
 const updated = '27 September 2026';
-const email = 'xeo776@gmail.com';
+const email = 'itslymanstudio@gmail.com';
 
 const policies = {
   privacy: {

@@ -44,7 +44,7 @@ try {
     });
     console.log(JSON.stringify({ width, ...state }));
     assert.equal(state.oldFooterDisplay, 'none');
-    assert.equal(state.emailHref, 'mailto:xeo776@gmail.com');
+    assert.equal(state.emailHref, 'mailto:itslymanstudio@gmail.com');
     assert.equal(state.background, 'rgb(16, 16, 16)');
     assert.equal(state.accent, 'rgb(200, 255, 49)');
     assert.equal(state.overflow, false);
