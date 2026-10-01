@@ -18,7 +18,7 @@ import { heroMediaStyles, heroMediaRuntime, replaceHeroMedia } from '../hero-med
 import { injectStaggeredMenu } from '../staggered-menu.mjs';
 import { renderLegalPage } from '../legal-pages.mjs';
 import { renderAboutPage } from '../about-page.mjs';
-import { dispatchPosts, dispatchRuntime, dispatchCardStyles, onlinePresenceRoute, renderOnlinePresenceArticle, onlinePresenceArticleStyles, replaceBlogCovers } from '../blog-dispatch.mjs';
+import { dispatchPosts, dispatchRuntime, dispatchCardStyles, onlinePresenceRoute, renderArticle, onlinePresenceArticleStyles, replaceBlogCovers } from '../blog-dispatch.mjs';
 import { buildBlogCovers } from './build-blog-covers.mjs';
 import { buildFooterEffects } from './build-footer-effects.mjs';
 const manifest = JSON.parse(await readFile('mirror-manifest.json', 'utf8'));
@@ -84,6 +84,8 @@ for (const route of manifest.routes) {
     await writeFile(output, `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=${homeHref}"><title>Contact | Lyman Studio</title></head><body><a href="${homeHref}">Contact Lyman Studio</a></body></html>`);
     continue;
   }
+  // All published articles are rendered from the shared content module below.
+  if (dispatchPosts.some(post => route === `/blog/${post.slug}`)) continue;
   let html = await readFile(path.join('public', route, 'index.html'), 'utf8');
   // A file:// document cannot import the published ES modules. This visual
   // fallback keeps the original server-rendered content and local media.
@@ -167,8 +169,8 @@ ${route === '/' ? `    <script src="${relative('public/hero-aurora-bars.js')}"><
   await mkdir(directory, { recursive: true });
   await writeFile(output, html);
 }
-{
-  const route = onlinePresenceRoute;
+for (const post of dispatchPosts) {
+  const route = `/blog/${post.slug}`;
   const output = routeFile(route);
   const directory = path.dirname(output);
   const relative = target => path.relative(directory, target).replaceAll('\\', '/') || './';
@@ -182,7 +184,7 @@ ${route === '/' ? `    <script src="${relative('public/hero-aurora-bars.js')}"><
     termsHref: relative('preview/terms/index.html'),
   };
   const footer = closingFooterMarkup({ ...links, footerEffectsSrc: relative('public/footer-magnet-lines.js') });
-  let html = renderOnlinePresenceArticle(relative('public/_assets'));
+  let html = renderArticle(post, relative('public/_assets'));
   html = html.replace('</head>', `<style>${spaceGroteskStyles(relative('public/_assets'))}${onlinePresenceArticleStyles}${closingFooterStyles}</style></head>`);
   html = html.replaceAll('href="/"', `href="${relative(routeFile('/'))}"`)
     .replaceAll('href="/projects"', `href="${relative(routeFile('/projects'))}"`)

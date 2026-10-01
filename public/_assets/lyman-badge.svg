@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="Lyman Studio LS badge">
+  <path fill="#101010" d="M0 0h320v320H0z"/>
+  <g transform="translate(44 66) scale(.85)" fill="#f3f0e9">
+    <path d="M0 0h66v164H0z"/>
+    <path d="M0 174h172v56H0z"/>
+    <path d="M90 55 142 0h138v55z"/>
+    <path d="M90 65h83l107 99h-98L90 78z"/>
+    <path fill="#c8ff31" d="M182 174h98v6l-48 50h-50z"/>
+  </g>
+</svg>

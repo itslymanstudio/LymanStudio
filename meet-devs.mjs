@@ -55,7 +55,7 @@ export function meetDevsMarkup(assetBase) {
         <article class="meet-devs__profile" data-preview-reveal="30">
           <button class="meet-devs__flip-card" type="button" data-flipped="false" aria-pressed="false" aria-label="Read about Rayan Ahmad">
             <span class="meet-devs__flip-inner">
-              <span class="meet-devs__face meet-devs__face--front"><img src="${portrait('rayan-ahmad')}" alt="Portrait of Rayan Ahmad" width="900" height="987" loading="lazy" draggable="false"></span>
+              <span class="meet-devs__face meet-devs__face--front"><img src="${portrait('rayan-ahmad')}" alt="Portrait of Rayan Ahmad" width="900" height="1350" loading="lazy" draggable="false"></span>
               <span class="meet-devs__face meet-devs__face--back" aria-hidden="true"><span class="meet-devs__back-kicker">Developer</span><span class="meet-devs__back-content"><span class="meet-devs__back-name">Rayan Ahmad</span><span class="meet-devs__back-description">Focuses on the foundations behind each launch: performance, accessibility, and dependable deployment from build to handoff.</span></span><span class="meet-devs__back-action">Click to return</span></span>
             </span><span class="meet-devs__glare" aria-hidden="true"></span>
           </button>

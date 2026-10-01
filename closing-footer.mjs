@@ -3,6 +3,7 @@ import { showProjects } from './site-features.mjs';
 const contactEmail = 'itslymanstudio@gmail.com';
 
 export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHref, contactHref, privacyHref, termsHref, footerEffectsSrc = '/footer-magnet-lines.js' }) {
+  const brandAssetBase = `${footerEffectsSrc.slice(0, footerEffectsSrc.lastIndexOf('/'))}/_assets`;
   return `<footer class="ratio-footer" aria-labelledby="ratio-footer-title">
     <div class="ratio-footer__contact" id="contact">
       <div class="ratio-footer__pitch">
@@ -55,7 +56,7 @@ export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHre
       </div>
     </div>
     <div class="ratio-footer__bottom">
-      <a class="ratio-footer__brand" href="${homeHref}">Lyman Studio</a>
+      <a class="ratio-footer__brand" href="${homeHref}"><img src="${brandAssetBase}/lyman-badge.svg" width="40" height="40" alt="" loading="lazy"/><span>Lyman Studio</span></a>
       <nav aria-label="Footer navigation">
         ${showProjects ? `<a href="${projectsHref}">Projects</a>` : ''}
         <a href="${aboutHref}">About</a>
@@ -225,6 +226,8 @@ export const closingFooterStyles = `
     text-transform: uppercase;
   }
   .ratio-footer__bottom nav { display: flex; flex-wrap: wrap; gap: clamp(16px, 2vw, 32px); }
+  .ratio-footer__brand { display: inline-flex; align-items: center; gap: 12px; }
+  .ratio-footer__brand img { display: block; width: 40px; height: 40px; flex-shrink: 0; }
   .ratio-footer__bottom a { color: var(--footer-ink); text-decoration: none; font: inherit !important; }
   .ratio-footer__bottom a:hover { color: var(--footer-lime); }
   .ratio-footer__legal { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px 20px; color: #aaa9a5; }
