@@ -153,6 +153,20 @@
   panel.addEventListener('click', event => {
     if (open && !event.target.closest('a, button')) closeMenu(false);
   });
+  panel.addEventListener('click', event => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link || !panel.contains(link)) return;
+    event.preventDefault();
+    const id = decodeURIComponent(link.getAttribute('href').slice(1));
+    closeMenu(false);
+    const scrollToTarget = () => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      target.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'start' });
+      history.replaceState(null, '', '#' + id);
+    };
+    setTimeout(scrollToTarget, reduced.matches ? 0 : 420);
+  });
   document.addEventListener('pointerdown', event => {
     if (open && !panel.contains(event.target) && !toggle.contains(event.target) && !wrapper.querySelector('.sm-logo').contains(event.target)) closeMenu(false);
   });

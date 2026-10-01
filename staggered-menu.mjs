@@ -70,7 +70,7 @@ export function staggeredMenuMarkup({ links, assetBase, currentRoute = '/' }) {
     { label: 'Work', ariaLabel: 'View our projects', href: links.projectsHref, route: '/projects' },
     { label: 'About', ariaLabel: 'Learn about Lyman Studio', href: links.aboutHref, route: '/about' },
     { label: 'Blog', ariaLabel: 'Read Creative Dispatch', href: links.blogHref, route: '/blog' },
-    { label: 'Contact', ariaLabel: 'Get in touch', href: links.contactHref, route: '/contact' },
+    { label: 'Contact', ariaLabel: 'Get in touch', href: links.contactHref, route: '#contact' },
   ].filter(item => showProjects || item.route !== '/projects');
   return `<div class="staggered-menu-wrapper" data-position="right" data-staggered-menu>
     <div class="sm-scrim" aria-hidden="true"></div>

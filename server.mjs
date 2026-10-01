@@ -56,13 +56,14 @@ async function send(req, res, data, headers, file) {
   res.end(req.method === 'HEAD' ? undefined : data);
 }
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.mp4': 'video/mp4', '.ico': 'image/x-icon' };
-const siteLinks = { homeHref: '/', projectsHref: '/projects', aboutHref: '/about', blogHref: '/blog', contactHref: '/contact', privacyHref: '/privacy', termsHref: '/terms' };
+const siteLinks = { homeHref: '/', projectsHref: '/projects', aboutHref: '/about', blogHref: '/blog', contactHref: '#contact', privacyHref: '/privacy', termsHref: '/terms' };
 const menuOptions = currentRoute => ({ links: siteLinks, assetBase: '/_assets', gsapSrc: '/gsap.min.js', menuSrc: '/staggered-menu.js', currentRoute });
 
 export async function requestHandler(req, res) {
   try {
     const url = new URL(req.url, 'http://localhost');
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); return res.end('Preview only'); }
+    if (url.pathname === '/contact' || url.pathname === '/contact/') { res.writeHead(302, { Location: '/#contact', 'Cache-Control': 'no-cache' }); return res.end(); }
     if (!showProjects && /^\/projects(?:\/|$)/.test(url.pathname)) {
       res.writeHead(302, { Location: '/', 'Cache-Control': 'no-cache' });
       return res.end();

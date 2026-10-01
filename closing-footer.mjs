@@ -4,7 +4,7 @@ const contactEmail = 'itslymanstudio@gmail.com';
 
 export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHref, contactHref, privacyHref, termsHref, footerEffectsSrc = '/footer-magnet-lines.js' }) {
   return `<footer class="ratio-footer" aria-labelledby="ratio-footer-title">
-    <div class="ratio-footer__contact">
+    <div class="ratio-footer__contact" id="contact">
       <div class="ratio-footer__pitch">
         <div class="ratio-footer__magnet" data-footer-magnet-lines aria-hidden="true"></div>
         <p class="ratio-footer__eyebrow">Have a project in mind?</p>
@@ -74,6 +74,7 @@ export function closingFooterMarkup({ homeHref, projectsHref, aboutHref, blogHre
 
 export const closingFooterStyles = `
   #main .framer-199pwpa-container { display: none !important; }
+  #contact { scroll-margin-top: 24px; }
   .ratio-footer, .ratio-footer * { box-sizing: border-box; }
   .ratio-footer {
     --footer-bg: #101010;
