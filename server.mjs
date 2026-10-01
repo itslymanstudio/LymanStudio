@@ -13,7 +13,7 @@ import { faqStyles, faqMarkup } from './faq-section.mjs';
 import { closingFooterMarkup, closingFooterStyles } from './closing-footer.mjs';
 import { studioMetricsStyles, studioMetricsMarkup } from './studio-metrics.mjs';
 import { siteCanvasStyles } from './site-canvas.mjs';
-import { processArticleRoute, processArticleStyles, processArticleMarkup } from './process-article.mjs';
+import { processArticleStyles, processArticleMarkup } from './process-article.mjs';
 import { logoLoopStyles } from './logo-loop.mjs';
 import { heroEffectsStyles } from './hero-effects.mjs';
 import { servicesCarouselStyles, servicesCarouselMarkup } from './services-carousel.mjs';
@@ -111,12 +111,11 @@ export async function requestHandler(req, res) {
       let html = data.toString();
       const home = url.pathname === '/' || url.pathname === '/index.html';
       const blogListing = url.pathname.replace(/\/$/, '') === '/blog';
-      const processArticle = url.pathname.replace(/\/$/, '') === processArticleRoute;
       html = rebrandHtml(html, { assetBase: '/_assets', contactHref: '/contact' });
       html = replaceBlogCovers(html, '/_assets', home ? '/' : url.pathname.replace(/\/$/,''));
       html = html.replace(/<html\b/i, `<html data-ratio-route="${home ? '/' : url.pathname.replace(/\/$/, '')}"`);
-      const referenceCtaStyles = processArticle ? '' : '#main footer[data-framer-name="CTA+Newsletter"]{display:none!important}';
-      const styles = `${spaceGroteskStyles('/_assets')}${closingFooterStyles}.framer-chdyiw-container{display:none!important}#__framer-badge-container,.__framer-badge{display:none!important}${referenceCtaStyles}${home ? `${introReferenceStyles}${studioMetricsStyles}${faqStyles}.framer-1ju0swc[data-framer-name="Testimonials"]{display:none!important}${meetDevsStyles}${logoLoopStyles}${heroEffectsStyles}${servicesCarouselStyles}` : ''}${processArticle ? processArticleStyles : ''}${siteCanvasStyles}`;
+      const referenceCtaStyles = '#main footer[data-framer-name="CTA+Newsletter"]{display:none!important}';
+      const styles = `${spaceGroteskStyles('/_assets')}${closingFooterStyles}.framer-chdyiw-container{display:none!important}#__framer-badge-container,.__framer-badge{display:none!important}${referenceCtaStyles}${home ? `${introReferenceStyles}${studioMetricsStyles}${faqStyles}.framer-1ju0swc[data-framer-name="Testimonials"]{display:none!important}${meetDevsStyles}${logoLoopStyles}${heroEffectsStyles}${servicesCarouselStyles}${processArticleStyles}` : ''}${siteCanvasStyles}`;
       html = html.replace('</head>', `<style>${styles}${dispatchCardStyles}</style></head>`);
       if (home) {
         html = replaceHeroMedia(html, '/_assets');
@@ -125,6 +124,8 @@ export async function requestHandler(req, res) {
       }
       html = html.replace('</body>', `${closingFooterMarkup(siteLinks)}</body>`);
       if (home) {
+        const processMarkup = JSON.stringify(processArticleMarkup);
+        html = html.replace('</body>', `<script>(()=>{const markup=${processMarkup};const mount=()=>{const blog=document.querySelector('section[data-framer-name="Blog"]');if(blog&&!document.querySelector('.ratio-process'))blog.insertAdjacentHTML('beforebegin',markup)};new MutationObserver(mount).observe(document.documentElement,{childList:true,subtree:true});mount()})()</script><script src="/process-article.js"></script></body>`);
         html = html.replace('</head>', '<link rel="stylesheet" href="/services-carousel.css"></head>');
         const services = JSON.stringify(servicesCarouselMarkup('/_assets'));
         html = html.replace('</body>', `<script>(()=>{const markup=${services};const mount=()=>{const old=document.querySelector('section.framer-jx0221[data-framer-name="Main"]');if(old&&!document.querySelector('.ratio-services'))old.insertAdjacentHTML('afterend',markup)};new MutationObserver(mount).observe(document.documentElement,{childList:true,subtree:true});mount()})()</script><script src="/services-carousel.js"></script></body>`);
@@ -138,10 +139,6 @@ export async function requestHandler(req, res) {
         html = html.replace('</body>', '<script src="/dev-flip.js"></script></body>');
         html = html.replace('</body>', '<script src="/logo-loop.js"></script></body>');
         html = html.replace('</body>', '<script src="/hero-aurora-bars.js"></script></body>');
-      }
-      if (processArticle) {
-        const processMarkup = JSON.stringify(processArticleMarkup);
-        html = html.replace('</body>', `<script>(()=>{const markup=${processMarkup};const mount=()=>{const pagination=document.querySelector('article[data-framer-name="Article"] [data-framer-name="Pagination"]');if(pagination&&!document.querySelector('.ratio-process'))pagination.insertAdjacentHTML('beforebegin',markup)};new MutationObserver(mount).observe(document.documentElement,{childList:true,subtree:true});mount()})()</script><script src="/process-article.js"></script></body>`);
       }
       html = html.replace('</body>', '<script src="/scroll-motion.js"></script></body>');
       html = html.replace('</body>', `<script>${dispatchRuntime()}</script></body>`);

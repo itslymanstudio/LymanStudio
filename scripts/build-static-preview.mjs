@@ -9,7 +9,7 @@ import { faqStyles, injectFaqMarkup } from '../faq-section.mjs';
 import { closingFooterMarkup, closingFooterStyles } from '../closing-footer.mjs';
 import { studioMetricsStyles, replaceMetricsSection } from '../studio-metrics.mjs';
 import { siteCanvasStyles } from '../site-canvas.mjs';
-import { processArticleRoute, processArticleStyles, injectProcessArticle } from '../process-article.mjs';
+import { processArticleStyles, injectProcessBeforeBlog } from '../process-article.mjs';
 import { logoLoopStyles } from '../logo-loop.mjs';
 import { heroEffectsStyles } from '../hero-effects.mjs';
 import { servicesCarouselStyles, injectServicesCarousel } from '../services-carousel.mjs';
@@ -86,7 +86,7 @@ for (const route of manifest.routes) {
   if (route === '/') html = replaceHeroMedia(html, relative('public/_assets'));
   if (route === '/') html = injectFaqMarkup(html);
   if (route === '/') html = injectServicesCarousel(html, relative('public/_assets'));
-  if (route === processArticleRoute) html = injectProcessArticle(html);
+  if (route === '/') html = injectProcessBeforeBlog(html);
   html = html.replace(/<([a-z][\w-]*)([^>]*?)style="([^"]*)"([^>]*)>/gi, (tag, name, before, style, after) => {
     if (!/opacity:\s*0(?:\.001)?(?:;|$)/.test(style)) return tag;
     const y = style.match(/translateY\((-?[\d.]+)px\)/)?.[1];
@@ -104,13 +104,13 @@ for (const route of manifest.routes) {
     ${route === '/' ? heroEffectsStyles : ''}
     ${route === '/' ? servicesCarouselStyles : ''}
     ${route === '/' ? heroMediaStyles : ''}
-    ${route === processArticleRoute ? processArticleStyles : ''}
+    ${route === '/' ? processArticleStyles : ''}
     ${closingFooterStyles}
     ${dispatchCardStyles}
     ${siteCanvasStyles}
     .framer-chdyiw-container{display:none!important}
     #__framer-badge-container,.__framer-badge{display:none!important}
-${route === processArticleRoute ? '' : '#main footer[data-framer-name="CTA+Newsletter"]{display:none!important}'}
+    #main footer[data-framer-name="CTA+Newsletter"]{display:none!important}
     [data-framer-appear-id]{opacity:1;transform:none}
     [data-framer-component-type="RichTextContainer"] span{opacity:1;transform:none}
     #main [style*="blur("]{filter:none!important}
@@ -144,7 +144,7 @@ ${route === '/' ? `    <script src="${relative('public/hero-aurora-bars.js')}"><
     ${route === '/' ? `<script src="${relative('public/studio-metrics.js')}"></script>` : ''}
     ${route === '/' ? `<script src="${relative('public/services-carousel.js')}"></script>` : ''}
     <script src="${relative('public/scroll-motion.js')}"></script>
-    ${route === processArticleRoute ? `<script src="${relative('public/process-article.js')}"></script>` : ''}
+    ${route === '/' ? `<script src="${relative('public/process-article.js')}"></script>` : ''}
     <script>${dispatchRuntime(relative('public/_assets'))}</script>
     <script src="${relative('public/ratio-runtime.js')}" data-asset-base="${relative('public/_assets')}" data-contact="${relative(routeFile('/contact'))}"></script></body>`);
   html = injectStaggeredMenu(html, { links, assetBase: relative('public/_assets'), gsapSrc: relative('public/gsap.min.js'), menuSrc: relative('public/staggered-menu.js'), currentRoute: route });

@@ -1,5 +1,3 @@
-export const processArticleRoute = '/blog/inside-the-studio-our-process-for-crafting-a-standout-identity';
-
 const steps = [
   { title: "Let's talk", description: 'We start with a conversation to understand your business, goals, and exactly what you need.' },
   { title: 'Plan & prototype', description: 'Before writing code, we map the site and show you a visual direction.' },
@@ -117,9 +115,8 @@ export const processArticleStyles = `
   }
 `;
 
-export function injectProcessArticle(html) {
-  const marker = html.indexOf('data-framer-name="Pagination"');
-  if (marker < 0) throw new Error('Inside the Studio article pagination not found');
-  const start = html.lastIndexOf('<div', marker);
+export function injectProcessBeforeBlog(html) {
+  const start = html.search(/<section\b(?=[^>]*\bdata-framer-name="Blog")/i);
+  if (start < 0) throw new Error('Homepage Creative Dispatch section not found');
   return html.slice(0, start) + processArticleMarkup + html.slice(start);
 }
