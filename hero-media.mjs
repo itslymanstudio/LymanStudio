@@ -73,12 +73,13 @@ function mountHeroMedia(media, assetBase) {
       }
       if (!animation || Math.abs(nextDistance - distance) > .5) {
         const elapsed = Number(animation?.currentTime || 0);
+        const progress = distance ? (elapsed / (distance / 36 * 1000)) % 1 : 0;
         animation?.cancel();
         distance = nextDistance;
         animation = track.animate([{ translate: '0px 0px' }, { translate: `${-distance}px 0px` }], {
           duration: distance / 36 * 1000, iterations: Infinity, easing: 'linear',
         });
-        animation.currentTime = elapsed % (distance / 36 * 1000);
+        animation.currentTime = progress * (distance / 36 * 1000);
         track._ratioHeroAnimation = animation;
       }
       sync();
@@ -90,7 +91,8 @@ function mountHeroMedia(media, assetBase) {
     const key = event => {
       if (reduced.matches && ['ArrowLeft', 'ArrowRight'].includes(event.key)) {
         event.preventDefault();
-        viewport.scrollBy({ left: event.key === 'ArrowRight' ? 192 : -192, behavior: 'instant' });
+        const step = track.firstElementChild.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0);
+        viewport.scrollBy({ left: event.key === 'ArrowRight' ? step : -step, behavior: 'instant' });
       }
     };
     track.classList.add('ratio-hero-track');
@@ -174,9 +176,23 @@ export function heroMediaRuntime(assetBase) {
 }
 
 export const heroMediaStyles = `
+  header[data-framer-name="Header"] { --hero-card-height: min(728px, 72.8vw, 58.8vh); --hero-card-radius: calc(var(--hero-card-height) * 80 / 520); --hero-strip-inset: clamp(10px, 2vw, 34px); --hero-inline-inset: 16px; --hero-carousel-overlap: 50px; position: relative !important; height: auto !important; min-height: calc(var(--hero-aurora-height) - var(--hero-aurora-lift) - var(--hero-carousel-overlap) + var(--hero-card-height) + 2 * var(--hero-strip-inset) + 32px) !important; }
+  @media (max-width: 600px), (max-width: 900px) and (max-height: 500px) { header[data-framer-name="Header"] { --hero-carousel-overlap: 145px; } }
+  @media (min-width: 810px) { header[data-framer-name="Header"] { --hero-inline-inset: 24px; } }
+  @media (min-width: 1200px) { header[data-framer-name="Header"] { --hero-inline-inset: 32px; } }
+  @supports (height: 1svh) { header[data-framer-name="Header"] { --hero-card-height: min(728px, 72.8vw, 58.8svh); } }
+  @media (max-height: 500px) { header[data-framer-name="Header"] { --hero-card-height: min(728px, 72.8vw, 39.2vh); } }
+  @supports (height: 1svh) { @media (max-height: 500px) { header[data-framer-name="Header"] { --hero-card-height: min(728px, 72.8vw, 39.2svh); } } }
+  header[data-framer-name="Header"] [data-framer-name="Carousel"] { position: absolute !important; top: calc(var(--hero-aurora-height) - var(--hero-aurora-lift) - var(--hero-carousel-overlap)) !important; left: var(--hero-inline-inset) !important; right: var(--hero-inline-inset) !important; width: auto !important; margin: 0 !important; z-index: 1; box-sizing: border-box !important; height: calc(var(--hero-card-height) + 2 * var(--hero-strip-inset)) !important; min-height: 0 !important; padding: var(--hero-strip-inset) 0 !important; gap: 0 !important; }
+  header[data-framer-name="Header"] [data-framer-name="Carousel"] > [data-framer-name="Text"] { display: none !important; }
   header[data-framer-name="Header"] [data-framer-name="Carousel"] [data-framer-name="Item"] {
     isolation: isolate;
+    width: calc(var(--hero-card-height) * 181 / 520) !important;
+    height: var(--hero-card-height) !important;
+    border-radius: var(--hero-card-radius) 0 !important;
+    overflow: hidden !important;
   }
+  header[data-framer-name="Header"] [data-framer-name="Carousel"] .ticker-item:nth-child(even) [data-framer-name="Item"] { border-radius: 0 var(--hero-card-radius) !important; }
   header[data-framer-name="Header"] [data-framer-name="Carousel"] [data-framer-name="Item"] > div {
     position: absolute !important;
     inset: 0 !important;
@@ -197,14 +213,11 @@ export const heroMediaStyles = `
     transform: none !important;
     opacity: 1 !important;
     will-change: translate;
+    gap: clamp(5px, 1.6vw, 10px) !important;
   }
+  .ratio-hero-viewport { height: var(--hero-card-height) !important; min-height: 0 !important; overflow-x: clip !important; overflow-y: visible !important; }
   .ratio-hero-viewport:focus-visible { outline: 2px solid #101010; outline-offset: 5px; }
   .ratio-hero-viewport[data-ratio-strip-paused] .ticker-item { animation-play-state: paused !important; }
-  @media (max-width: 809.98px) {
-    header[data-framer-name="Header"] [data-framer-name="Carousel"] { height: clamp(241px, 80.8vw, 554px) !important; }
-    header[data-framer-name="Header"] [data-framer-name="Carousel"] [data-framer-name="Item"] { width: clamp(84px, 28vw, 181px) !important; height: clamp(241px, 80.8vw, 520px) !important; }
-    .ratio-hero-track { gap: clamp(6px, 2.56vw, 10px) !important; }
-  }
   @media (prefers-reduced-motion: reduce) {
     .ratio-hero-viewport { overflow-x: auto !important; scrollbar-width: none; }
     .ratio-hero-track { translate: none !important; will-change: auto; }

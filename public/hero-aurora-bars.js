@@ -1,5 +1,5 @@
 (() => {
-  const barCount = 16;
+  const targetBarWidth = 88;
   const minHeightRatio = 0.18;
   const maxHeightRatio = 0.92;
   const speed = 1.1;
@@ -34,20 +34,42 @@
     aurora.setAttribute('aria-hidden', 'true');
     const bars = document.createElement('div');
     bars.className = 'ratio-hero-aurora__bars';
-    const barElements = Array.from({ length: barCount }, (_, index) => {
-      const slot = document.createElement('div');
-      slot.className = 'ratio-hero-aurora__slot';
-      const bar = document.createElement('div');
-      bar.className = 'ratio-hero-aurora__bar';
-      bar.style.setProperty('--aurora-height', `${barHeight(index, barCount, 0) * 100}%`);
-      slot.append(bar);
-      bars.append(slot);
-      return bar;
-    });
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const started = performance.now();
+    let barCount = 0;
+    let barElements = [];
     const shade = document.createElement('div');
     shade.className = 'ratio-hero-aurora__shade';
     aurora.append(bars, shade);
     hero.prepend(aurora);
+
+    const syncBars = () => {
+      const nextCount = Math.max(10, Math.min(16, Math.round(aurora.getBoundingClientRect().width / targetBarWidth)));
+      if (nextCount === barCount) return;
+      barCount = nextCount;
+      const time = reducedMotion ? 0 : (performance.now() - started) / 1000 * speed;
+      const fragment = document.createDocumentFragment();
+      barElements = Array.from({ length: barCount }, (_, index) => {
+        const slot = document.createElement('div');
+        slot.className = 'ratio-hero-aurora__slot';
+        const bar = document.createElement('div');
+        bar.className = 'ratio-hero-aurora__bar';
+        bar.style.setProperty('--aurora-height', `${barHeight(index, barCount, time) * 100}%`);
+        slot.append(bar);
+        fragment.append(slot);
+        return bar;
+      });
+      bars.replaceChildren(fragment);
+    };
+    syncBars();
+    const resizeObserver = new ResizeObserver(() => {
+      if (!aurora.isConnected) {
+        resizeObserver.disconnect();
+        return;
+      }
+      syncBars();
+    });
+    resizeObserver.observe(aurora);
 
     const updateColors = elapsed => {
       const position = elapsed / paletteDuration;
@@ -62,9 +84,8 @@
     };
     updateColors(0);
 
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (reducedMotion) return;
     let lastColorUpdate = 0;
-    const started = performance.now();
     const animate = () => {
       if (!aurora.isConnected) return;
       const now = performance.now();
