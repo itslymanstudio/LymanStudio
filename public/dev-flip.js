@@ -10,22 +10,25 @@
     let down = null;
     let suppressClick = false;
 
-    const flip = () => {
+    const flip = (keyboard = false) => {
       const flipped = card.dataset.flipped !== 'true';
       card.dataset.flipped = String(flipped);
-      card.setAttribute('aria-pressed', String(flipped));
-      card.setAttribute('aria-label', `${flipped ? 'Show portrait of' : 'Read about'} ${card.closest('.meet-devs__profile').querySelector('h3').textContent}`);
       front.setAttribute('aria-hidden', String(flipped));
       back.setAttribute('aria-hidden', String(!flipped));
+      front.inert = flipped;
+      back.inert = !flipped;
+      if (keyboard) (flipped ? back.querySelector('button') : front.querySelector('button')).focus({ preventScroll: true });
       card.dispatchEvent(new CustomEvent('flipchange', { detail: { flipped } }));
     };
 
-    card.addEventListener('click', () => {
+    card.addEventListener('click', event => {
+      if (event.target.closest('a')) return;
       if (suppressClick) { suppressClick = false; return; }
-      flip();
+      flip(event.detail === 0);
     });
     card.addEventListener('dragstart', event => event.preventDefault());
     card.addEventListener('pointerdown', event => {
+      if (event.target.closest('a, .meet-devs__back-action')) return;
       down = { x: event.clientX, y: event.clientY };
       card.setPointerCapture(event.pointerId);
     });

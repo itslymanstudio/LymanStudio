@@ -200,6 +200,11 @@ export const heroMediaStyles = `
   }
   .ratio-hero-viewport:focus-visible { outline: 2px solid #101010; outline-offset: 5px; }
   .ratio-hero-viewport[data-ratio-strip-paused] .ticker-item { animation-play-state: paused !important; }
+  @media (max-width: 809.98px) {
+    header[data-framer-name="Header"] [data-framer-name="Carousel"] { height: clamp(241px, 80.8vw, 554px) !important; }
+    header[data-framer-name="Header"] [data-framer-name="Carousel"] [data-framer-name="Item"] { width: clamp(84px, 28vw, 181px) !important; height: clamp(241px, 80.8vw, 520px) !important; }
+    .ratio-hero-track { gap: clamp(6px, 2.56vw, 10px) !important; }
+  }
   @media (prefers-reduced-motion: reduce) {
     .ratio-hero-viewport { overflow-x: auto !important; scrollbar-width: none; }
     .ratio-hero-track { translate: none !important; will-change: auto; }

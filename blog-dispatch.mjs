@@ -1,6 +1,140 @@
 export const onlinePresenceSlug = 'why-every-small-business-needs-an-online-presence';
 export const onlinePresenceRoute = `/blog/${onlinePresenceSlug}`;
 
+const articleHighlights = {
+  'inside-the-studio-our-process-for-crafting-a-standout-identity': [
+    ['ask a lot of questions', 'underline', '#71518f'],
+    ['the gap, the corner nobody has claimed yet', 'highlight', '#6e963e'],
+    ['Three real ones, each with a point of view', 'circle', '#aa5e42'],
+    ['a small set of rules', 'scribble', '#357a88'],
+  ],
+  'why-every-brand-needs-a-signature-visual-language': [
+    ['pattern of small visual cues', 'circle', '#71518f'],
+    ['signature visual language doing its job', 'highlight', '#6e963e'],
+    ['small, deliberate set of parts', 'scribble', '#aa5e42'],
+    ['Closing it doesn\'t need a huge budget', 'underline', '#357a88'],
+  ],
+  [onlinePresenceSlug]: [
+    ['one dependable place that does a few jobs well', 'highlight', '#6e963e'],
+    ['rented space', 'circle', '#aa5e42'],
+    ['make the next step obvious', 'scribble', '#71518f'],
+    ['show up for the person two streets away', 'underline', '#357a88'],
+  ],
+};
+
+function highlightArticleCopy(post, copy) {
+  for (const [phrase, action, color] of articleHighlights[post.slug] || []) {
+    const index = copy.indexOf(phrase);
+    if (index < 0) continue;
+    const highlighted = `<mark class="ratio-highlighter ratio-highlighter--${action}" style="--highlighter-color:${color}">${phrase}</mark>`;
+    return `${copy.slice(0, index)}${highlighted}${copy.slice(index + phrase.length)}`;
+  }
+  return copy;
+}
+
+export const articleHighlighterRuntime = `
+  (() => {
+    const marks = document.querySelectorAll('.ratio-highlighter');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const paragraphs = [...new Set([...marks].map(mark => mark.parentElement))];
+    const ns = 'http://www.w3.org/2000/svg';
+    const groups = new WeakMap();
+    const draw = paragraph => {
+      paragraph.querySelector('.ratio-annotation')?.remove();
+      const bounds = paragraph.getBoundingClientRect();
+      const svg = document.createElementNS(ns, 'svg');
+      svg.classList.add('ratio-annotation');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('viewBox', '0 0 ' + bounds.width + ' ' + bounds.height);
+      svg.setAttribute('width', bounds.width);
+      svg.setAttribute('height', bounds.height);
+      paragraph.querySelectorAll('.ratio-highlighter').forEach((mark, index) => {
+        const group = document.createElementNS(ns, 'g');
+        const visible = mark.classList.contains('is-visible');
+        if (visible) { group.classList.add('is-visible'); group.setAttribute('data-instant', ''); }
+        group.style.color = mark.style.getPropertyValue('--highlighter-color');
+        groups.set(mark, group);
+        const path = (d, width, opacity, delay = 0) => {
+          const stroke = document.createElementNS(ns, 'path');
+          stroke.setAttribute('d', d);
+          stroke.setAttribute('fill', 'none');
+          stroke.setAttribute('stroke', 'currentColor');
+          stroke.setAttribute('stroke-width', width);
+          stroke.setAttribute('stroke-opacity', opacity);
+          stroke.setAttribute('stroke-linecap', 'round');
+          stroke.setAttribute('stroke-linejoin', 'round');
+          stroke.setAttribute('pathLength', '1');
+          stroke.style.transitionDelay = delay + 'ms';
+          group.append(stroke);
+        };
+        const range = document.createRange();
+        range.selectNodeContents(mark);
+        [...range.getClientRects()].forEach((rect, line) => {
+          const x = rect.left - bounds.left, y = rect.top - bounds.top;
+          const w = rect.width, h = rect.height, bottom = y + h;
+          const seed = index * 1.7 + line * 2.3;
+          const wave = (baseline, amp, steps = 10) => {
+            let d = 'M ' + (x - 2) + ' ' + baseline;
+            for (let i = 1; i <= steps; i++) {
+              const jitter = Math.sin(i * 2.1 + seed) * amp + Math.cos(i * .83 + seed) * amp * .45;
+              d += ' L ' + (x + w * i / steps + 2) + ' ' + (baseline + jitter);
+            }
+            return d;
+          };
+          const delay = line * 140;
+          if (mark.classList.contains('ratio-highlighter--circle')) {
+            const left = x - 7, right = x + w + 7, mid = y + h / 2;
+            path('M ' + right + ' ' + mid + ' C ' + (right + 6) + ' ' + (y - 7) + ', ' + (left + w * .25) + ' ' + (y - 8) + ', ' + left + ' ' + (mid - 1) + ' C ' + (left - 10) + ' ' + (bottom + 8) + ', ' + (right - w * .2) + ' ' + (bottom + 9) + ', ' + (right + 2) + ' ' + (mid - 3), 1.6, .8, delay);
+            path('M ' + (right - 6) + ' ' + (mid - 7) + ' C ' + (right + 15) + ' ' + (bottom + 7) + ', ' + (left + 6) + ' ' + (bottom + 6) + ', ' + (left - 2) + ' ' + mid + ' C ' + (left + 3) + ' ' + (y - 9) + ', ' + (right - 15) + ' ' + (y - 4) + ', ' + (right + 3) + ' ' + (mid + 2), .85, .36, delay + 180);
+          } else if (mark.classList.contains('ratio-highlighter--highlight')) {
+            path(wave(y + h * .67, 1.25), h * .65, .4, delay);
+            path(wave(y + h * .58, .9), h * .47, .3, delay + 130);
+            // Fine overlapping strands give the broad pastel stroke a dry edge.
+            for (let i = 0; i < 5; i++) path(wave(y + h * (.28 + i * .13), .65, 17), .65, .32, delay + 80 + i * 20);
+          } else if (mark.classList.contains('ratio-highlighter--scribble')) {
+            let d = 'M ' + (x - 3) + ' ' + (bottom + 1);
+            const loops = Math.max(4, Math.round(w / 12));
+            for (let i = 0; i < loops; i++) {
+              const start = x + w * i / loops, end = x + w * (i + 1) / loops;
+              d += ' Q ' + (start + 4) + ' ' + (bottom + 7 + Math.sin(i + seed)) + ', ' + end + ' ' + (bottom + 1 + Math.cos(i * 1.9 + seed));
+            }
+            path(d, 1.8, .75, delay);
+            path(wave(bottom + 4, .9, 13), .8, .45, delay + 200);
+          } else {
+            path(wave(bottom + 1, 1.05, 11), 1.25, .8, delay);
+            path(wave(bottom + 3.5, .7, 15), .65, .4, delay + 170);
+          }
+        });
+        svg.append(group);
+      });
+      paragraph.append(svg);
+    };
+    const render = () => paragraphs.forEach(draw);
+    render();
+    document.fonts?.ready.then(render);
+    let resizeFrame;
+    if ('ResizeObserver' in window) {
+      const resize = new ResizeObserver(() => {
+        cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(render);
+      });
+      paragraphs.forEach(paragraph => resize.observe(paragraph));
+    }
+    if (reducedMotion || !('IntersectionObserver' in window)) {
+      marks.forEach(mark => { mark.classList.add('is-visible'); groups.get(mark)?.classList.add('is-visible'); });
+      return;
+    }
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        groups.get(entry.target)?.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.35, rootMargin: '0px 0px -5% 0px' });
+    marks.forEach(mark => observer.observe(mark));
+  })();`;
+
 export const dispatchPosts = [
   {
     slug: 'inside-the-studio-our-process-for-crafting-a-standout-identity',
@@ -258,6 +392,13 @@ export const onlinePresenceArticleStyles = `
   .ratio-article-body{max-width:none;margin:clamp(56px,8vw,96px) 0 0}
   .ratio-article-body h2{margin:58px 0 16px;font:600 clamp(30px,4vw,46px)/.98 var(--font-main,"Space Grotesk",sans-serif);letter-spacing:-.065em}
   .ratio-article-body p{margin:0 0 22px;color:#4f4d48;font:400 18px/1.65 var(--font-main,"Space Grotesk",sans-serif);letter-spacing:-.018em}
+  .ratio-article-body p{position:relative;isolation:isolate}
+  .ratio-highlighter{color:inherit;background:transparent}
+  .ratio-annotation{position:absolute;left:0;top:0;z-index:-1;overflow:visible;pointer-events:none}
+  .ratio-annotation path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .85s cubic-bezier(.4,0,.2,1)}
+  .ratio-annotation .is-visible path{stroke-dashoffset:0}
+  .ratio-annotation [data-instant] path{transition:none}
+  @media(prefers-reduced-motion:reduce){.ratio-annotation path{transition:none;stroke-dashoffset:0}}
   .ratio-article-pager{margin:clamp(64px,10vw,110px) 0 0;padding-top:28px;border-top:1px solid #c5c3bd;display:flex;gap:16px;justify-content:space-between}
   .ratio-article-pager__link{display:flex;flex-direction:column;gap:7px;flex:1 1 0;min-width:0;text-decoration:none;color:#101010;border:1px solid #c5c3bd;border-radius:14px;padding:18px 20px;transition:border-color .2s ease,background .2s ease}
   .ratio-article-pager__link:hover{border-color:#101010;background:#e9e4da}
@@ -269,12 +410,12 @@ export const onlinePresenceArticleStyles = `
 `;
 
 export function renderArticle(post, assetBase = '/_assets') {
-  const sections = post.body.map(block => `${block.h2 ? `<h2>${block.h2}</h2>` : ''}${block.p.map(para => `<p>${para}</p>`).join('')}`).join('');
+  const sections = post.body.map(block => `${block.h2 ? `<h2>${block.h2}</h2>` : ''}${block.p.map(para => `<p>${highlightArticleCopy(post, para)}</p>`).join('')}`).join('');
   const index = dispatchPosts.indexOf(post);
   const prev = index > 0 ? dispatchPosts[index - 1] : null;
   const next = index >= 0 && index < dispatchPosts.length - 1 ? dispatchPosts[index + 1] : null;
   const pager = `<nav class="ratio-article-pager" aria-label="Post navigation">${prev ? `<a class="ratio-article-pager__link ratio-article-pager__link--prev" href="/blog/${prev.slug}"><span>&larr; Previous</span><strong>${prev.title}</strong></a>` : '<div class="ratio-article-pager__spacer" aria-hidden="true"></div>'}${next ? `<a class="ratio-article-pager__link ratio-article-pager__link--next" href="/blog/${next.slug}"><span>Next &rarr;</span><strong>${next.title}</strong></a>` : '<div class="ratio-article-pager__spacer" aria-hidden="true"></div>'}</nav>`;
-  return `<!doctype html><html lang="en" data-ratio-route="/blog/${post.slug}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="${post.description}"><meta property="og:image" content="${assetBase}/blog-covers/${post.cover}-1440.webp"><meta property="article:published_time" content="${post.iso}"><title>${post.title} | Lyman Studio</title><link rel="icon" href="${assetBase}/lymen-symbol.svg"><style>${onlinePresenceArticleStyles}</style></head><body><main class="ratio-article-page"><nav class="ratio-article-nav" aria-label="Main navigation"><a class="ratio-article-brand" href="/">LYMAN STUDIO</a><span>Independent creative studio · Bengaluru, India</span><div><a href="/projects">Projects</a> &nbsp; <a href="/about">About</a> &nbsp; <a href="/blog">Dispatch</a></div></nav><article class="ratio-article-content"><p class="ratio-article-eyebrow">Creative Dispatch &nbsp; / &nbsp; ${post.date}</p><h1>${post.title}</h1><p class="ratio-article-deck">${post.deck}</p>${blogCoverMarkup(post,assetBase)}<div class="ratio-article-body">${sections}</div>${pager}</article></main></body></html>`;
+  return `<!doctype html><html lang="en" data-ratio-route="/blog/${post.slug}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="${post.description}"><meta property="og:image" content="${assetBase}/blog-covers/${post.cover}-1440.webp"><meta property="article:published_time" content="${post.iso}"><title>${post.title} | Lyman Studio</title><link rel="icon" href="${assetBase}/lymen-symbol.svg"><style>${onlinePresenceArticleStyles}</style></head><body><main class="ratio-article-page"><nav class="ratio-article-nav" aria-label="Main navigation"><a class="ratio-article-brand" href="/">LYMAN STUDIO</a><span>Independent creative studio · Bengaluru, India</span><div><a href="/projects">Projects</a> &nbsp; <a href="/about">About</a> &nbsp; <a href="/blog">Dispatch</a></div></nav><article class="ratio-article-content"><p class="ratio-article-eyebrow">Creative Dispatch &nbsp; / &nbsp; ${post.date}</p><h1>${post.title}</h1><p class="ratio-article-deck">${post.deck}</p>${blogCoverMarkup(post,assetBase)}<div class="ratio-article-body">${sections}</div>${pager}</article></main><script>${articleHighlighterRuntime}</script></body></html>`;
 }
 
 export function renderOnlinePresenceArticle(assetBase = '/_assets') {

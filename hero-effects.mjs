@@ -1,5 +1,6 @@
 // Light motion for the existing hero; media sources are swapped separately.
 export const heroEffectsStyles = `
+  html[data-ratio-route="/"] header[data-framer-name="Header"] [data-framer-name="Timer"] { display: none !important; }
   html[data-ratio-route="/"] header[data-framer-name="Header"] [data-framer-name="Horizontal"] { display: none !important; }
   html[data-ratio-route="/"] header[data-framer-name="Header"] a[data-framer-name="Black Full"] {
     display: flex !important;
@@ -20,7 +21,7 @@ export const heroEffectsStyles = `
   html[data-ratio-route="/"] header[data-framer-name="Header"] a[data-framer-name="Black Full"]::after { content: none; }
   html[data-ratio-route="/"] header[data-framer-name="Header"] .framer-1dih5dt { display: none !important; }
   @media (max-width: 809.98px) {
-    html[data-ratio-route="/"] header[data-framer-name="Header"] a[data-framer-name="Black Full"] { font-size: clamp(54px, 15.8vw, 84px) !important; letter-spacing: -.09em !important; }
+    html[data-ratio-route="/"] header[data-framer-name="Header"] a[data-framer-name="Black Full"] { font-size: clamp(48px, 14.76vw, 58px) !important; letter-spacing: -.09em !important; }
   }
   html[data-ratio-route="/"] header[data-framer-name="Header"].ratio-hero-aurora-host { position: relative; isolation: isolate; }
   html[data-ratio-route="/"] header[data-framer-name="Header"].ratio-hero-aurora-host > [data-framer-name="Content"] { position: relative; z-index: 1; }
