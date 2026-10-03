@@ -2,6 +2,8 @@
 // JSON-LD structured data, robots.txt and sitemap.xml. All absolute URLs are
 // built from a single siteUrl so switching domains later is one config change.
 
+const GOOGLE_SITE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION || 'qD26VlhSVQabDNDkGPOI8yqy9vuyVBkSYZ2itu_lmN8';
+
 export function normalizePath(path) {
   const s = String(path || '/').replace(/\/index\.html$/i, '').replace(/\/{2,}/g, '/').replace(/\/+$/, '');
   return s === '' ? '/' : s;
@@ -87,6 +89,7 @@ export function applySeo(html, { siteUrl, path, post } = {}) {
 
   html = html
     .replace(/<meta\s+name="framer-search-index[^"]*"[^>]*>/gi, '')
+    .replace(/<meta\b[^>]*name="google-site-verification"[^>]*>/gi, '')
     .replace(/<link\b[^>]*rel="canonical"[^>]*>/gi, '')
     .replace(/<meta\b[^>]*property="og:(?:url|title|description|type)"[^>]*>/gi, '')
     .replace(/<meta\b[^>]*name="twitter:(?:title|description|card)"[^>]*>/gi, '');
@@ -94,6 +97,7 @@ export function applySeo(html, { siteUrl, path, post } = {}) {
   if (override?.description) html = html.replace(/(<meta\s+name="description"\s+content=")[^"]*(")/i, `$1${escapeAttr(override.description)}$2`);
 
   let add = '';
+  if (GOOGLE_SITE_VERIFICATION) add += `<meta name="google-site-verification" content="${escapeAttr(GOOGLE_SITE_VERIFICATION)}">`;
   add += `<link rel="canonical" href="${escapeAttr(canonical)}">`;
   add += `<meta property="og:url" content="${escapeAttr(canonical)}">`;
   add += `<meta property="og:site_name" content="Lyman Studio">`;
