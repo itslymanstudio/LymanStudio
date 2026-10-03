@@ -22,8 +22,10 @@ import { injectStaggeredMenu } from './staggered-menu.mjs';
 import { renderLegalPage } from './legal-pages.mjs';
 import { renderAboutPage } from './about-page.mjs';
 import { dispatchPosts, dispatchRuntime, dispatchCardStyles, renderArticle, replaceBlogCovers } from './blog-dispatch.mjs';
+import { applySeo, robotsTxt, sitemapXml } from './seo.mjs';
 const root = fileURLToPath(new URL('./public/', import.meta.url)).replace(/[\\/]$/, '');
 const production = process.env.NODE_ENV === 'production';
+const SITE_URL = (process.env.SITE_URL || 'https://lyman-studio-five.vercel.app').replace(/\/+$/, '');
 const assetAliases = await readFile(path.join(root, 'deployment-assets.json'), 'utf8').then(JSON.parse).catch(() => ({}));
 const compressBrotli = promisify(brotliCompress);
 const decompressBrotli = promisify(brotliDecompress);
@@ -64,9 +66,15 @@ export async function requestHandler(req, res) {
   try {
     const url = new URL(req.url, 'http://localhost');
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); return res.end('Preview only'); }
+    if (url.pathname === '/robots.txt') { res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' }); return res.end(robotsTxt(SITE_URL)); }
+    if (url.pathname === '/sitemap.xml') {
+      const entries = [{ path: '/' }, { path: '/about' }, { path: '/blog' }, ...dispatchPosts.map(post => ({ path: '/blog/' + post.slug, lastmod: post.iso })), { path: '/privacy' }, { path: '/terms' }];
+      if (showProjects) entries.splice(1, 0, { path: '/projects' });
+      res.writeHead(200, { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' }); return res.end(sitemapXml(SITE_URL, entries));
+    }
     if (url.pathname === '/contact' || url.pathname === '/contact/') { res.writeHead(302, { Location: '/#contact', 'Cache-Control': 'no-cache' }); return res.end(); }
     if (/^\/about(?:\/index\.html|\/)?$/.test(url.pathname)) {
-      const body = Buffer.from(injectStaggeredMenu(renderAboutPage(siteLinks), menuOptions('/about')));
+      const body = Buffer.from(applySeo(injectStaggeredMenu(renderAboutPage(siteLinks), menuOptions('/about')), { siteUrl: SITE_URL, path: '/about' }));
       return send(req, res, body, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
     }
     if (!showProjects && /^\/projects(?:\/|$)/.test(url.pathname)) {
@@ -82,8 +90,8 @@ export async function requestHandler(req, res) {
     const articlePost = dispatchPosts.find(post => articlePath === '/blog/' + post.slug);
     if (articlePost) {
       const articleRoute = '/blog/' + articlePost.slug;
-      const article = injectStaggeredMenu(renderArticle(articlePost, '/_assets').replace('</head>', `<style>${spaceGroteskStyles('/_assets')}${closingFooterStyles}</style></head>`)
-        .replace('</body>', `${closingFooterMarkup(siteLinks)}<script src="/scroll-motion.js"></script><script src="/ratio-runtime.js?v=2" data-asset-base="/_assets" data-contact="/contact"></script></body>`), menuOptions(articleRoute));
+      const article = applySeo(injectStaggeredMenu(renderArticle(articlePost, '/_assets').replace('</head>', `<style>${spaceGroteskStyles('/_assets')}${closingFooterStyles}</style></head>`)
+        .replace('</body>', `${closingFooterMarkup(siteLinks)}<script src="/scroll-motion.js"></script><script src="/ratio-runtime.js?v=2" data-asset-base="/_assets" data-contact="/contact"></script></body>`), menuOptions(articleRoute)), { siteUrl: SITE_URL, path: articleRoute, post: articlePost });
       const body = Buffer.from(article);
       return send(req, res, body, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
     }
@@ -93,7 +101,7 @@ export async function requestHandler(req, res) {
     }
     const legalKind = url.pathname.match(/^\/(privacy|terms)\/?$/)?.[1];
     if (legalKind) {
-      const body = Buffer.from(injectStaggeredMenu(renderLegalPage(legalKind, siteLinks, '/_assets', '/scroll-motion.js'), menuOptions(`/${legalKind}`)));
+      const body = Buffer.from(applySeo(injectStaggeredMenu(renderLegalPage(legalKind, siteLinks, '/_assets', '/scroll-motion.js'), menuOptions(`/${legalKind}`)), { siteUrl: SITE_URL, path: `/${legalKind}` }));
       return send(req, res, body, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
     }
     let file = path.resolve(root, '.' + decodeURIComponent(url.pathname));
@@ -152,7 +160,7 @@ export async function requestHandler(req, res) {
       html = html.replace('</body>', `<script>${dispatchRuntime()}</script></body>`);
       html = html.replace('</body>', '<script src="/ratio-runtime.js?v=2" data-asset-base="/_assets" data-contact="/contact"></script></body>');
       html = injectStaggeredMenu(html, menuOptions(home ? '/' : url.pathname.replace(/\/$/, '')));
-      data = Buffer.from(html);
+      data = Buffer.from(applySeo(html, { siteUrl: SITE_URL, path: url.pathname }));
     }
     const headers = { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': production && path.extname(file) !== '.html' ? 'public, max-age=86400' : 'no-cache', 'Accept-Ranges': 'bytes' };
     const cmsRange = url.searchParams.get('range');
