@@ -53,32 +53,62 @@ function blogPostingJsonLd(post, siteUrl, canonical) {
   return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
 }
 
+export const PAGE_META = {
+  '/': {
+    title: 'Lyman Studio | Brand & Website Design Studio, Bengaluru',
+    description: 'Lyman Studio is a creative studio in Bengaluru. We build brand identities, websites, and digital experiences that help businesses look good and get found.',
+  },
+  '/about': {
+    title: 'About Lyman Studio | Brand & Web Designers in Bengaluru',
+    description: "We're an independent creative studio in Bengaluru. We design brand identities and websites that are distinctive, useful, and built to last.",
+  },
+  '/blog': {
+    title: 'Creative Dispatch | Branding & Design Notes | Lyman Studio',
+    description: 'Short, practical notes from Lyman Studio on brand identity, visual design, and building websites that work for small businesses.',
+  },
+  '/privacy': {
+    title: 'Privacy Policy | Lyman Studio',
+    description: 'How Lyman Studio collects, uses, and protects the information you share with us.',
+  },
+  '/terms': {
+    title: 'Terms & Conditions | Lyman Studio',
+    description: 'The terms for using the Lyman Studio website and engaging our design services.',
+  },
+};
+
 export function applySeo(html, { siteUrl, path, post } = {}) {
-  const canonical = absoluteUrl(siteUrl, path);
-  const title = firstMatch(html, /<title>([^<]*)<\/title>/i);
-  const description = firstMatch(html, /<meta\s+name="description"\s+content="([^"]*)"/i);
+  const np = normalizePath(path);
+  const override = PAGE_META[np];
+  const existingTitle = firstMatch(html, /<title[^>]*>([\s\S]*?)<\/title>/i);
+  const existingDesc = firstMatch(html, /<meta\s+name="description"\s+content="([^"]*)"/i);
+  const title = override?.title || existingTitle || 'Lyman Studio';
+  const description = override?.description || existingDesc || '';
+  const canonical = absoluteUrl(siteUrl, np);
+
+  html = html
+    .replace(/<meta\s+name="framer-search-index[^"]*"[^>]*>/gi, '')
+    .replace(/<link\b[^>]*rel="canonical"[^>]*>/gi, '')
+    .replace(/<meta\b[^>]*property="og:(?:url|title|description|type)"[^>]*>/gi, '')
+    .replace(/<meta\b[^>]*name="twitter:(?:title|description|card)"[^>]*>/gi, '');
+  if (override?.title) html = html.replace(/<title[^>]*>[\s\S]*?<\/title>/i, `<title>${escapeAttr(override.title)}</title>`);
+  if (override?.description) html = html.replace(/(<meta\s+name="description"\s+content=")[^"]*(")/i, `$1${escapeAttr(override.description)}$2`);
 
   let add = '';
   add += `<link rel="canonical" href="${escapeAttr(canonical)}">`;
   add += `<meta property="og:url" content="${escapeAttr(canonical)}">`;
   add += `<meta property="og:site_name" content="Lyman Studio">`;
   add += `<meta property="og:locale" content="en_IN">`;
-  if (!/property="og:type"/i.test(html)) add += `<meta property="og:type" content="${post ? 'article' : 'website'}">`;
-  if (!/property="og:title"/i.test(html) && title) add += `<meta property="og:title" content="${escapeAttr(title)}">`;
-  if (!/property="og:description"/i.test(html) && description) add += `<meta property="og:description" content="${escapeAttr(description)}">`;
-  if (!/name="twitter:card"/i.test(html)) add += `<meta name="twitter:card" content="summary_large_image">`;
-  if (!/name="twitter:title"/i.test(html) && title) add += `<meta name="twitter:title" content="${escapeAttr(title)}">`;
-  if (!/name="twitter:description"/i.test(html) && description) add += `<meta name="twitter:description" content="${escapeAttr(description)}">`;
+  add += `<meta property="og:type" content="${post ? 'article' : 'website'}">`;
+  if (title) add += `<meta property="og:title" content="${escapeAttr(title)}">`;
+  if (description) add += `<meta property="og:description" content="${escapeAttr(description)}">`;
+  add += `<meta name="twitter:card" content="summary_large_image">`;
+  if (title) add += `<meta name="twitter:title" content="${escapeAttr(title)}">`;
+  if (description) add += `<meta name="twitter:description" content="${escapeAttr(description)}">`;
   if (post) add += blogPostingJsonLd(post, siteUrl, canonical);
-  else if (normalizePath(path) === '/') add += organizationJsonLd(siteUrl);
+  else if (np === '/') add += organizationJsonLd(siteUrl);
 
-  html = html
-    .replace(/<meta\s+name="framer-search-index[^"]*"[^>]*>/gi, '')
-    .replace(/<link\b[^>]*rel="canonical"[^>]*>/gi, '')
-    .replace(/<meta\b[^>]*property="og:url"[^>]*>/gi, '')
-    .replace('</head>', `${add}\n</head>`);
+  html = html.replace('</head>', `${add}\n</head>`);
 
-  // Open Graph and Twitter images must be absolute URLs for social previews.
   html = html.replace(/(<meta\s+(?:property="og:image"|name="twitter:image")\s+content=")([^"]*)(")/gi,
     (match, prefix, url, suffix) => `${prefix}${absoluteUrl(siteUrl, url)}${suffix}`);
 
